@@ -10,13 +10,13 @@ module adder_1bit
   (
 input wire a,
    input wire b,
-   input wire carry_in
-   output wire sum
-   output wire carry_out
+   input wire carry_in,
+   output reg sum,
+   output reg carry_out
    );
 
    always @(a,b,carry_in) begin: COM
       sum = carry_in ^ (a ^ b);
-      carry_out = ((!carry_in) && b && a) || (carry_in && (b || a))
+      carry_out = ((!carry_in) && b && a) || (carry_in && (b || a));
 	end
-   end module
+   endmodule
