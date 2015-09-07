@@ -1,19 +1,19 @@
-// 337 TA Provided Lab 2 Testbench
-// This code serves as a test bench for the 1 bit adder design 
+// 337 student modified  Lab 2 Testbet
+// This code serves as a test bench for the 4 bit adder design 
 
 `timescale 1ns / 100ps
 
-module tb_adder_1bit
+module tb_adder_4bit
 ();
 	// Define local parameters used by the test bench
-	localparam NUM_INPUT_BITS			= 1;
+	localparam NUM_INPUT_BITS			= 4;
 	localparam NUM_OUTPUT_BITS		= NUM_INPUT_BITS + 1;
 	localparam MAX_OUTPUT_BIT			= NUM_OUTPUT_BITS - 1;
 	localparam NUM_TEST_BITS 			= (NUM_INPUT_BITS * 2) + 1;
 	localparam MAX_TEST_BIT				= NUM_TEST_BITS - 1;
 	localparam NUM_TEST_CASES 		= 2 ** NUM_TEST_BITS;
 	localparam MAX_TEST_VALUE 		= NUM_TEST_CASES - 1;
-	localparam TEST_A_BIT					= 0;
+	localparam TEST_A_BIT					= 3;
 	localparam TEST_B_BIT					= NUM_INPUT_BITS;
 	localparam TEST_CARRY_IN_BIT	= MAX_TEST_BIT;
 	localparam TEST_SUM_BIT				= 0;
@@ -21,11 +21,11 @@ module tb_adder_1bit
 	localparam TEST_DELAY					= 10;
 	
 	// Declare Design Under Test (DUT) portmap signals
-	wire	tb_a;
-	wire	tb_b;
+	wire	[3:0]tb_a;
+	wire	[3:0]tb_b;
 	wire	tb_carry_in;
-	wire	tb_sum;
-	wire	tb_carry_out;
+	wire	[3:0]tb_sum;
+	wire	[3:0]tb_carrys;
 	
 	// Declare test bench signals
 	integer tb_test_case;
@@ -33,11 +33,11 @@ module tb_adder_1bit
 	reg [MAX_OUTPUT_BIT:0] tb_expected_outputs;
 	
 	// DUT port map
-	adder_1bit DUT(.a(tb_a), .b(tb_b), .carry_in(tb_carry_in), .sum(tb_sum), .carry_out(tb_carry_out));
+	adder_4bit DUT(.a(tb_a), .b(tb_b), .carry_in(tb_carry_in), .sum(tb_sum), .carrys(tb_carry_out));
 	
 	// Connect individual test input bits to a vector for easier testing
-	assign tb_a					= tb_test_inputs[TEST_A_BIT];
-	assign tb_b					= tb_test_inputs[TEST_B_BIT];
+	assign tb_a					= tb_test_inputs[TEST_A_BIT:0];
+	assign tb_b					= tb_test_inputs[MAX_TEST_VALUE:TEST_B_BIT];
 	assign tb_carry_in	= tb_test_inputs[TEST_CARRY_IN_BIT];
 	
 	// Test bench process
