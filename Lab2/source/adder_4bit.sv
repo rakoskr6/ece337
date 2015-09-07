@@ -8,7 +8,6 @@
 
 module adder_4bit
   (
-   wire [4:0] carrys,
    input wire [3:0] a,
    input wire [3:0] b,
    output reg overflow,
@@ -17,6 +16,7 @@ module adder_4bit
    );
 
    genvar     i;
+   wire [4:0] carrys;
    
 assign carrys[0] = carry_in;
 generate
