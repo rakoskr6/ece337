@@ -10,9 +10,9 @@ module adder_4bit
   (
    input wire [3:0] a,
    input wire [3:0] b,
-   output reg overflow,
+   output overflow,
    input wire carry_in,
-   output wire [3:0]sum
+   output [3:0]sum
    );
 
    genvar     i;
