@@ -329,7 +329,7 @@ MOD_NAME := $(basename $(MAIN_FILE))
 mapped/$(TOP_MODULE).v: SHELL := /usr/local/bin/tcsh
 mapped/$(TOP_MODULE).v: source/$(TOP_LEVEL_FILE) $(addprefix source/,$(COMPONENT_FILES))
 	@echo "Synthesizing design: $@\n"
-	@$(MAKE) --no-print-directory syn_mapped MAIN_FILE='$(TOP_LEVEL_FILE)' DEP_SUB_FILES='$(COMPONENT_FILES)' CLOCK_NAME='clk' CLOCK_PERIOD='2' > $(TOP_MODULE).log
+	@$(MAKE) --no-print-directory syn_mapped MAIN_FILE='$(TOP_LEVEL_FILE)' DEP_SUB_FILES='$(COMPONENT_FILES)' CLOCK_NAME='' CLOCK_PERIOD='2' > $(TOP_MODULE).log
 	@echo "Synthesis run attempt for $@ complete"
 	@echo "Checking synthesis attempt for errors"
 	@syschk -w $(notdir $(basename $@))

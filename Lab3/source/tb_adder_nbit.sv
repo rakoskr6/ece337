@@ -63,24 +63,14 @@ module tb_adder_nbit
 			#(TEST_DELAY - 1);
 			
 			// Check the DUT's Sum output value
-			if(tb_expected_outputs[TEST_SUM_BIT:0] == tb_sum)
-			begin
-				$info("Correct Sum value for test case %d!", tb_test_case);
-			end
+			assert(tb_expected_outputs[TEST_SUM_BIT:0] == tb_sum)
 			else
-			begin
 				$error("Incorrect Sum value for test case %d!", tb_test_case);
-			end
 			
 			// Check the DUT's Carry Out output value
-			if(tb_expected_outputs[TEST_CARRY_OUT_BIT] == tb_carry_out)
-			begin
-				$info("Correct Carry Out value for test case %d!", tb_test_case);
-			end
+			assert(tb_expected_outputs[TEST_CARRY_OUT_BIT] == tb_carry_out)
 			else
-			begin
 				$error("Incorrect Carry Out value for test case %d!", tb_test_case);
-			end
 		end
 	end
 	

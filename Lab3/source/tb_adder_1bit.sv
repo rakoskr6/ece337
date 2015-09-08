@@ -19,6 +19,8 @@ module tb_adder_1bit
 	localparam TEST_SUM_BIT				= 0;
 	localparam TEST_CARRY_OUT_BIT	= MAX_OUTPUT_BIT;
 	localparam TEST_DELAY					= 10;
+   localparam NUM_ERRORS = 0;
+   
 	
 	// Declare Design Under Test (DUT) portmap signals
 	wire	tb_a;
@@ -63,25 +65,19 @@ module tb_adder_1bit
 			#(TEST_DELAY - 1);
 			
 			// Check the DUT's Sum output value
-			if(tb_expected_outputs[TEST_SUM_BIT] == tb_sum)
-			begin
-				$info("Correct Sum value for test case %d!", tb_test_case);
-			end
+			assert(tb_expected_outputs[TEST_SUM_BIT] == tb_sum)
 			else
-			begin
-				$error("Incorrect Sum value for test case %d!", tb_test_case);
-			end
+			  $error("Incorrect Sum value for test case %d!", tb_test_case);
+		   
+
 			
 			// Check the DUT's Carry Out output value
-			if(tb_expected_outputs[TEST_CARRY_OUT_BIT] == tb_carry_out)
-			begin
-				$info("Correct Carry Out value for test case %d!", tb_test_case);
-			end
+			assert(tb_expected_outputs[TEST_CARRY_OUT_BIT] == tb_carry_out)
 			else
-			begin
-				$error("Incorrect Carry Out value for test case %d!", tb_test_case);
-			end
-		end
+			  $error("Incorrect Carry Out value for test case %d!", tb_test_case);
+		   
+		end // for (tb_test_case = 0; tb_test_case < NUM_TEST_CASES; tb_test_case = tb_test_case + 1)
+	   
 	end
 	
 	// Wrap-up process
@@ -97,5 +93,7 @@ module tb_adder_1bit
 			// Test bench was run to completion
 			$display("This test bench has run to completion");
 		end
+	   
+		    
 	end
 endmodule
