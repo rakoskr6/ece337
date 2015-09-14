@@ -7,7 +7,7 @@
 // Description: Flexible and Scalable counter with controlled rollover
 
 
-module flex_counter.sv
+module flex_counter
   #(
     parameter NUM_CNT_BITS = 4
     )
@@ -17,69 +17,51 @@ module flex_counter.sv
     input clear,
     input count_enable,
     input [NUM_CNT_BITS-1:0]rollover_val,
-    output [NUM_CNT_BITS-1:0]count_out,
+    output reg [NUM_CNT_BITS-1:0]count_out,
     output reg rollover_flag
     );
 
-   genvar 		i;
-   reg [NUM_BITS-1:0] 	parallel_in_reg;
+   genvar      i;
+   reg [NUM_BITS-1:0] parallel_in_reg;
    
-   generate
-      for (i=0; i<NUM_BITS; i=i+1)
-	begin
-	   always_ff @ (posedge clk, negedge n_rst)
-	     begin
-		if(1'b0 == n_rst)
-		  begin
-		     parallel_in_reg[i]<=1;
-		  end
-		else if (load_enable == 1'b1)
-		  begin
-		     //load registers with parallel_in
-		     parallel_in_reg[i] <= parallel_in[i];
-		     
-		  end
-		
-		else if (shift_enable == 1'b1)
-		  begin
-		     if (SHIFT_MSB == 1'b1)
-		       begin
-			  if (i == 0)
-			    begin
-			       parallel_in_reg[i] <= 1;
-			    end
-			  else
-			    begin
-			       parallel_in_reg[i] <= parallel_in_reg[i-1];
-			    end
-		       end // if (SHIFT_MSB == 1'b1
-		     else
-		       begin
-			  if (i == NUM_BITS-1)
-			    begin
-			       parallel_in_reg[i] <= 1;
-			    end
-			  else
-			    begin
-			       parallel_in_reg[i] <= parallel_in_reg[i+1];
-			    end
-		       end 
-		  end
-		else
-		  begin
-		     parallel_in_reg[i] <= parallel_in_reg[i];
-		  end  
-		
-	     end // always_ff @ (posedge clk, negedge n_rst)
-	   if (SHIFT_MSB == 1'b1)
-	     begin
-		assign serial_out = parallel_in_reg[NUM_BITS-1];
-	     end
-	   else
-	     begin
-		assign serial_out = parallel_in_reg[0];
-	     end
-	end // for (i=0; i<NUM_BITS; i=i+1)
-      
-   endgenerate
+
+   always_ff @ (posedge clk, negedge n_rst)
+     begin
+	if(1'b0 == n_rst)
+	  begin
+	     rollover_flag <= 1'b0;
+	     count_out <= 0;
+	  end
+	else if (count_enable == 1'b1)
+	  begin
+	     if (clear == 1'b1)
+	       begin
+		  count_out <= 0;
+	       end
+	     else
+	       begin
+		  if (count_out >= rollover_val)
+		    begin
+		       rollover_flag <= 1'b0;
+		       count_out <= 1;
+		    end
+		  else if (count_out == rollover_val - 1)
+		    begin
+		       count_out <= count_out + 1;
+		       rollover_flag <= 1'b1;
+		    end		       
+		  else
+		    begin
+		       count_out <= count_out + 1;
+		       rollover_flag <= 1'b0;
+		    end
+	       end
+	  end // if (count_enable == 1'b1)
+	else
+	  begin
+	     count_out <= count_out;
+	  end
+	
+     end
+
 endmodule
