@@ -1,23 +1,24 @@
 // $Id: $
-// File name:   flex_pts_sr.sv
+// File name:   flex_counter.sv
 // Created:     9/13/2015
 // Author:      Kyle Rakos
 // Lab Section: 337-01
 // Version:     1.0  Initial Design Entry
-// Description: Flexible parallel to serial shift register
+// Description: Flexible and Scalable counter with controlled rollover
 
-module flex_pts_sr
+
+module flex_counter.sv
   #(
-    parameter NUM_BITS = 4,
-    parameter SHIFT_MSB = 1
+    parameter NUM_CNT_BITS = 4
     )
    (
     input clk,
     input n_rst,
-    input shift_enable,
-    input load_enable,
-    output serial_out,
-    input reg [NUM_BITS-1:0] parallel_in
+    input clear,
+    input count_enable,
+    input [NUM_CNT_BITS-1:0]rollover_val,
+    output [NUM_CNT_BITS-1:0]count_out,
+    output reg rollover_flag
     );
 
    genvar 		i;

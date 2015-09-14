@@ -18,7 +18,7 @@ module flex_stp_sr
     output reg [NUM_BITS-1:0] parallel_out
     );
 
-   genvar 		i;
+   genvar 		      i;
    
    generate
       for (i=0; i<NUM_BITS; i=i+1)
@@ -59,7 +59,7 @@ module flex_stp_sr
 		     parallel_out[i] <= parallel_out[i];
 		     
 		  end  
-		  
+		
 	     end
 	end
    endgenerate
