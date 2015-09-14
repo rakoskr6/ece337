@@ -17,81 +17,7 @@ module tb_flex_stp_sr ();
 	
 	// Shared Test Variables
 	reg tb_clk;
-	
-	// Default Config Test Variables & constants
-	localparam DEFAULT_SIZE = 4;
-	localparam DEFAULT_MAX_BIT = (DEFAULT_SIZE - 1);
-	localparam DEFAULT_MSB = 1;
-	
-	integer tb_default_test_num;
-	integer tb_default_i;
-	integer tb_default_fail_cnt;
-	reg tb_default_n_reset;
-	reg [DEFAULT_MAX_BIT:0] tb_default_parallel_out;
-	reg tb_default_shift_en;
-	reg tb_default_serial_in;
-	reg [DEFAULT_MAX_BIT:0] tb_default_test_data;
-	reg [DEFAULT_MAX_BIT:0] tb_default_expected_out;
-	
-	// Config 1 Test Variables & constants
-	localparam CONFIG1_SIZE = 8;
-	localparam CONFIG1_MAX_BIT = (CONFIG1_SIZE - 1);
-	localparam CONFIG1_MSB = 1;
-	
-	integer tb_config1_test_num;
-	integer tb_config1_i;
-	integer tb_config1_fail_cnt;
-	reg tb_config1_n_reset;
-	reg [CONFIG1_MAX_BIT:0] tb_config1_parallel_out;
-	reg tb_config1_shift_en;
-	reg tb_config1_serial_in;
-	reg [CONFIG1_MAX_BIT:0] tb_config1_test_data;
-	reg [CONFIG1_MAX_BIT:0] tb_config1_expected_out;
-	
-	// Config 2 Test Variables & constants
-	localparam CONFIG2_SIZE = 4;
-	localparam CONFIG2_MAX_BIT = (CONFIG2_SIZE - 1);
-	localparam CONFIG2_MSB = 0;
-	
-	integer tb_config2_test_num;
-	integer tb_config2_i;
-	integer tb_config2_fail_cnt;
-	reg tb_config2_n_reset;
-	reg [CONFIG2_MAX_BIT:0] tb_config2_parallel_out;
-	reg tb_config2_shift_en;
-	reg tb_config2_serial_in;
-	reg [CONFIG2_MAX_BIT:0] tb_config2_test_data;
-	reg [CONFIG2_MAX_BIT:0] tb_config2_expected_out;
-	
-	
-	// DUT portmaps
-	flex_stp_sr DEFAULT
-	(
-		.clk(tb_clk),
-		.n_rst(tb_default_n_reset),
-		.serial_in(tb_default_serial_in),
-		.shift_enable(tb_default_shift_en),
-		.parallel_out(tb_default_parallel_out)
-	);
-	
-	stp_sr_8_msb CONFIG1
-	(
-		.clk(tb_clk),
-		.n_rst(tb_config1_n_reset),
-		.serial_in(tb_config1_serial_in),
-		.shift_enable(tb_config1_shift_en),
-		.parallel_out(tb_config1_parallel_out)
-	);
-	
-	stp_sr_4_lsb CONFIG2
-	(
-		.clk(tb_clk),
-		.n_rst(tb_config2_n_reset),
-		.serial_in(tb_config2_serial_in),
-		.shift_enable(tb_config2_shift_en),
-		.parallel_out(tb_config2_parallel_out)
-	);
-	
+
 	// Clock generation block
 	always
 	begin
@@ -101,700 +27,224 @@ module tb_flex_stp_sr ();
 		#(CLK_PERIOD/2.0);
 	end
 	
+	localparam DEFAULT_SIZE = 4;
+	localparam DEFALUT_MSB  = 1;
+
+	tb_flex_stp_sr_DUT #(.SIZE(DEFAULT_SIZE), .MSB(DEFALUT_MSB)) stp_default(.tb_clk);
+	tb_flex_stp_sr_DUT #(.SIZE(8),		  .MSB(1), .NAME("config1")) stp_config1(.tb_clk);
+	tb_flex_stp_sr_DUT #(.SIZE(4),		  .MSB(0), .NAME("config2")) stp_config2(.tb_clk);
+endmodule
+
+module tb_flex_stp_sr_DUT
+	#(parameter SIZE = 4, MSB = 1, NAME = "default")
+	(input wire tb_clk);
+
+	// Default Config Test Variables & constants
+	localparam MAX_BIT = (SIZE - 1);
+	
+	integer tb_test_num;
+	reg tb_n_rst;
+	reg [MAX_BIT:0] tb_parallel_out;
+	reg tb_shift_enable;
+	reg tb_serial_in;
+	reg [MAX_BIT:0] tb_test_data;
+	reg [MAX_BIT:0] tb_expected_out;
+
+	generate
+	if(NAME == "default")
+	// DUT portmaps
+		flex_stp_sr DUT
+		(
+			.clk(tb_clk),
+			.n_rst(tb_n_rst),
+			.serial_in(tb_serial_in),
+			.shift_enable(tb_shift_enable),
+			.parallel_out(tb_parallel_out)
+		);
+	else if (NAME == "config1")
+		stp_sr_8_msb DUT
+		(
+			.clk(tb_clk),
+			.n_rst(tb_n_rst),
+			.serial_in(tb_serial_in),
+			.shift_enable(tb_shift_enable),
+			.parallel_out(tb_parallel_out)
+		);
+	else if (NAME == "config2")
+		stp_sr_4_lsb DUT
+		(
+			.clk(tb_clk),
+			.n_rst(tb_n_rst),
+			.serial_in(tb_serial_in),
+			.shift_enable(tb_shift_enable),
+			.parallel_out(tb_parallel_out)
+		);
+	endgenerate
+	
+	clocking cb @(posedge tb_clk);
+ 		// 1step means 1 time precision unit, 10ps for this module. We assume the hold time is less than 200ps.
+		default input #1step output #100ps; // Setup time (01CLK -> 10D) is 94 ps
+		output #800ps n_rst = tb_n_rst; // FIXME: Removal time (01CLK -> 01R) is 281.25ps, but this needs to be 800 to prevent metastable value warnings
+		output serial_in = tb_serial_in,
+			shift_enable = tb_shift_enable;
+		input parallel_out = tb_parallel_out;
+	endclocking
+	
 	// Default Configuration Test bench main process
 	initial
 	begin
 		// Initialize all of the test inputs
-		tb_default_n_reset		= 1'b1;		// Initialize to be inactive
-		tb_default_serial_in	= 1'b1;		// Initialize to be idle
-		tb_default_shift_en		= 1'b0;		// Initialize to be inactive
-		tb_default_test_num 	= 0;
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			tb_default_test_data[tb_default_i] = 1'b1;
-		end
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			tb_default_expected_out[tb_default_i] = 1'b1;
-		end
+		tb_n_rst		= 1'b1;		// Initialize to be inactive
+		tb_serial_in	= 1'b1;		// Initialize to be idle
+		tb_shift_enable		= 1'b0;		// Initialize to be inactive
+		tb_test_num 	= 0;
+		
+		tb_test_data = '1;
+		
+		tb_expected_out = '1;
 		
 		// Power-on Reset of the DUT
-		#(0.1);
-		tb_default_n_reset	= 1'b0; 	// Need to actually toggle this in order for it to actually run dependent always blocks
-		#(CLK_PERIOD * 2.25);	// Release the reset away from a clock edge
-		tb_default_n_reset	= 1'b1; 	// Deactivate the chip reset
+		// Assume we start at negative edge. Immediately assert reset at first negative edge
+		// without using clocking block in order to avoid metastable value warnings
+		@(negedge tb_clk);
+		tb_n_rst	<= 1'b0; 	// Need to actually toggle this in order for it to actually run dependent always blocks
+		@cb;
+		cb.n_rst	<= 1'b1; 	// Deactivate the chip reset
 		
 		// Wait for a while to see normal operation
-		#(CLK_PERIOD);
+		@cb;
+		@cb;
 		
-		// Test 1: Check for Proper Reset w/ Idle input
-		@(negedge tb_clk); 
-		tb_default_test_num = tb_default_test_num + 1;
-		tb_default_n_reset = 1'b0;
-		tb_default_serial_in = 1'b1;
-		tb_default_shift_en = 1'b0;
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			tb_default_test_data[tb_default_i] = 1'b1;
-		end
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			tb_default_expected_out[tb_default_i] = 1'b1;
-		end
-		#(CHECK_DELAY);
-		if (tb_default_test_data == tb_default_parallel_out)
-			$info("Default Case %0d:: PASSED", tb_default_test_num);
+		// Test 1: Check for Proper Reset w/ Idle (serial_in=1) input during reset signal
+		tb_test_num = tb_test_num + 1;
+		cb.n_rst <= 1'b0;
+		cb.serial_in <= 1'b1;
+		cb.shift_enable <= 1'b0;
+		
+		tb_test_data = '1;
+		tb_expected_out = '1;
+		@cb; // Measure slightly before the second clock edge
+		@cb;
+		if (tb_expected_out == cb.parallel_out)
+			$info("%s Case %0d:: PASSED", NAME, tb_test_num);
 		else // Test case failed
-			$error("Default Case %0d:: FAILED", tb_default_test_num);
+			$error("%s Case %0d:: FAILED", NAME, tb_test_num);
+		// De-assert reset for a cycle
+		cb.n_rst <= 1'b1;
+		@cb;
 		
-		// Test 2: Check for Proper Reset w/ Active inputs
-		@(negedge tb_clk); 
-		tb_default_test_num = tb_default_test_num + 1;
-		tb_default_n_reset = 1'b0;
-		tb_default_serial_in = 1'b0;
-		tb_default_shift_en = 1'b1;
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			tb_default_test_data[tb_default_i] = 1'b1;
-		end
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			tb_default_expected_out[tb_default_i] = 1'b1;
-		end
-		@(posedge tb_clk);
-		@(posedge tb_clk);
-		#(CHECK_DELAY);
-		if (tb_default_test_data == tb_default_parallel_out)
-			$info("Default Case %0d:: PASSED", tb_default_test_num);
+		// Test 2: Check for Proper Reset w/ Active (serial_in=0) inputs during reset signal
+		tb_test_num = tb_test_num + 1;
+		cb.n_rst <= 1'b0;
+		cb.serial_in <= 1'b0;
+		cb.shift_enable <= 1'b1;
+		
+		tb_test_data = '1;
+		tb_expected_out = '1;
+		@cb;
+		if (tb_expected_out == cb.parallel_out)
+			$info("%s Case %0d:: PASSED", NAME, tb_test_num);
 		else // Test case failed
-			$error("Default Case %0d:: FAILED", tb_default_test_num);
+			$error("%s Case %0d:: FAILED", NAME, tb_test_num);
+		// De-assert reset for a cycle
+		cb.n_rst <= 1'b1;
+		@cb;
 		
-		// Test 3: Check for Proper Shift Enable Control w/ enable off
+		// Test 3: Check for Proper Shift Enable Control w/ enable off and serial_in low
 		// Power-on Reset of the DUT (Best case conditions)
-		@(negedge tb_clk); 
-		tb_default_test_num = tb_default_test_num + 1;
-		tb_default_serial_in = 1'b1;
-		tb_default_shift_en = 1'b0;
-		tb_default_n_reset	= 1'b0; 	
-		#(CLK_PERIOD * 2);
-		@(negedge tb_clk);	// Release the reset away from a clock edge
-		tb_default_n_reset	= 1'b1;	// Deactivate the chip reset
+		tb_test_num = tb_test_num + 1;
+		run_reset_DUT();
+		
 		// Perform test
-		tb_default_serial_in = 1'b0;
-		tb_default_shift_en = 1'b0;
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			tb_default_test_data[tb_default_i] = 1'b1;
-		end
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			tb_default_expected_out[tb_default_i] = 1'b1;
-		end
-		@(posedge tb_clk);
-		#(CHECK_DELAY);
-		if (tb_default_test_data == tb_default_parallel_out)
-			$info("Default Case %0d:: PASSED", tb_default_test_num);
+		cb.serial_in 	<= 1'b0;
+		cb.shift_enable	<= 1'b0;
+		
+		tb_expected_out = '1;
+		
+		@(cb);
+		@(cb);
+		if (tb_expected_out == cb.parallel_out)
+			$info("%s Case %0d:: PASSED", NAME, tb_test_num);
 		else // Test case failed
-			$error("Default Case %0d:: FAILED", tb_default_test_num);
+			$error("%s Case %0d:: FAILED", NAME, tb_test_num);
 		
 		// Test 4: Check for Proper Shift Enable Control w/ enable on for one shift
 		// Power-on Reset of the DUT (Best case conditions)
-		@(negedge tb_clk); 
-		tb_default_test_num = tb_default_test_num + 1;
-		tb_default_serial_in = 1'b1;
-		tb_default_shift_en = 1'b0;
-		tb_default_n_reset	= 1'b0; 	
-		#(CLK_PERIOD * 2);
-		@(negedge tb_clk);	// Release the reset away from a clock edge
-		tb_default_n_reset	= 1'b1;	// Deactivate the chip reset
-		// Perform test
-		tb_default_serial_in = 1'b0;
-		tb_default_shift_en = 1'b1;
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			if(DEFAULT_MAX_BIT == tb_default_i) // MSB -> Most significant bit is the fireset one sent
-				tb_default_test_data[tb_default_i] = 1'b0;
-			else
-				tb_default_test_data[tb_default_i] = 1'b1;
-		end
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			tb_default_expected_out[tb_default_i] = 1'b1;
-		end
-		@(posedge tb_clk);
-		#(CHECK_DELAY);
-		tb_default_expected_out = {tb_default_expected_out[(DEFAULT_MAX_BIT - 1):0], tb_default_serial_in}; // Shift test data
-		if (tb_default_expected_out == tb_default_parallel_out)
-			$info("Default Case %0d:: PASSED", tb_default_test_num);
-		else // Test case failed
-			$error("Default Case %0d:: FAILED", tb_default_test_num);
+		@(cb); 
+		tb_test_num = tb_test_num + 1;
+		run_shift_test(.num_shifts(1), .test_data({(SIZE){1'b0}}));
 		
 		// Test 5: Check for Proper Shift Enable Control w/ enable on for full value shift
 		// Power-on Reset of the DUT (Best case conditions)
-		@(negedge tb_clk); 
-		tb_default_test_num = tb_default_test_num + 1;
-		tb_default_serial_in = 1'b1;
-		tb_default_shift_en = 1'b0;
-		tb_default_n_reset	= 1'b0; 	
-		#(CLK_PERIOD * 2);
-		@(negedge tb_clk);	// Release the reset away from a clock edge
-		tb_default_n_reset	= 1'b1;	// Deactivate the chip reset
-		// Prep for shifting
-		tb_default_shift_en = 1'b1;
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			tb_default_test_data[tb_default_i] = 1'b0;
-		end
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			tb_default_expected_out[tb_default_i] = 1'b1;
-		end
-		// Shift through the full value and track failure(s)
-		tb_default_fail_cnt = 0;
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			// Assign the new serial input value
-			tb_default_serial_in = tb_default_test_data[(DEFAULT_MAX_BIT - tb_default_i)]; 
-			// Perform shift
-			@(posedge tb_clk);
-			#(CHECK_DELAY);
-			// Updated expected output calculation
-			tb_default_expected_out = {tb_default_expected_out[(DEFAULT_MAX_BIT - 1):0], tb_default_serial_in}; 
-			// Compare expected output with actual and track failure(s)
-			if (tb_default_expected_out != tb_default_parallel_out)
-			begin
-				// Current shift failed
-				tb_default_fail_cnt = tb_default_fail_cnt + 1;
-			end
-		end
-		// Check for failure(s)
-		if(0 < tb_default_fail_cnt)
-		begin
-			// Test failed
-			$error("Default Case %0d:: FAILED", tb_default_test_num);
-		end
-		else
-		begin
-			// Test passed
-			$info("Default Case %0d:: PASSED", tb_default_test_num);
-		end
+		@(cb); 
+		tb_test_num = tb_test_num + 1;
+		run_shift_test(.num_shifts(SIZE), .test_data({(SIZE){1'b0}}));
 		
 		// Test 6: Check for Proper Shift Enable Control w/ enable on and mixed values
 		// Power-on Reset of the DUT (Best case conditions)
-		@(negedge tb_clk); 
-		tb_default_test_num = tb_default_test_num + 1;
-		tb_default_serial_in = 1'b1;
-		tb_default_shift_en = 1'b0;
-		tb_default_n_reset	= 1'b0; 	
-		#(CLK_PERIOD * 2);
-		@(negedge tb_clk);	// Release the reset away from a clock edge
-		tb_default_n_reset	= 1'b1;	// Deactivate the chip reset
+		@(cb); 
+		tb_test_num = tb_test_num + 1;
+		run_shift_test(.num_shifts(SIZE), .test_data({(SIZE/2){2'b10}}));
+	end
+
+	task automatic run_reset_DUT();
+		cb.serial_in 	<= 1'b1;
+		cb.shift_enable	<= 1'b0;
+		cb.n_rst	<= 1'b0;
+
+		@(cb);
+		cb.n_rst	<= 1'b1;	// Deactivate the chip reset
+	endtask
+	// Define outside of task so that they have a per-module scope. Declaring the task as
+	// "automatic" would be correct, but make it hard to see the variables in the simulator
+	integer tb_fail_cnt;
+	reg [MAX_BIT:0] expected_out;
+	integer shift_test_i;
+	task automatic run_shift_test(input integer num_shifts, input [SIZE-1:0] test_data);
+
+		run_reset_DUT();
 		// Prep for shifting
-		tb_default_shift_en = 1'b1;
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			if(0 == (tb_default_i % 2)) // Even bit
-				tb_default_test_data[tb_default_i] = 1'b1;
-			else // Odd bit
-				tb_default_test_data[tb_default_i] = 1'b0;
-		end
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
-		begin
-			tb_default_expected_out[tb_default_i] = 1'b1;
-		end
+		cb.shift_enable	<= 1'b1;
+
+		expected_out = '1;
+		
 		// Shift through the full value and track failure(s)
-		tb_default_fail_cnt = 0;
-		for(tb_default_i = 0; tb_default_i < DEFAULT_SIZE; tb_default_i = tb_default_i + 1)
+		tb_fail_cnt = 0;
+		for(shift_test_i = 0; shift_test_i < num_shifts; shift_test_i = shift_test_i + 1)
 		begin
-			// Assign the new serial input value
-			tb_default_serial_in = tb_default_test_data[(DEFAULT_MAX_BIT - tb_default_i)]; 
-			// Perform shift
-			@(posedge tb_clk);
-			#(CHECK_DELAY);
-			// Updated expected output calculation
-			tb_default_expected_out = {tb_default_expected_out[(DEFAULT_MAX_BIT - 1):0], tb_default_serial_in}; 
+			// Schedule the new serial input value
+			cb.serial_in <= test_data[(MAX_BIT - shift_test_i)]; 
+			// Go to the next edge
+			@(cb);
 			// Compare expected output with actual and track failure(s)
-			if (tb_default_expected_out != tb_default_parallel_out)
+			if (expected_out != cb.parallel_out)
 			begin
 				// Current shift failed
-				tb_default_fail_cnt = tb_default_fail_cnt + 1;
+				tb_fail_cnt = tb_fail_cnt + 1;
 			end
-		end
-		// Check for failure(s)
-		if(0 < tb_default_fail_cnt)
-		begin
-			// Test failed
-			$error("Default Case %0d:: FAILED", tb_default_test_num);
-		end
-		else
-		begin
-			// Test passed
-			$info("Default Case %0d:: PASSED", tb_default_test_num);
-		end
-	end
-	
-	// Config 1 Configuration (8-bit MSB) Test bench main process
-	initial
-	begin
-		// Initialize all of the test inputs
-		tb_config1_n_reset		= 1'b1;		// Initialize to be inactive
-		tb_config1_serial_in	= 1'b1;		// Initialize to be idle
-		tb_config1_shift_en		= 1'b0;		// Initialize to be inactive
-		tb_config1_test_num 	= 0;
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			tb_config1_test_data[tb_config1_i] = 1'b1;
-		end
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			tb_config1_expected_out[tb_config1_i] = 1'b1;
-		end
-		
-		// Power-on Reset of the DUT
-		#(0.1);
-		tb_config1_n_reset	= 1'b0; 	// Need to actually toggle this in order for it to actually run dependent always blocks
-		#(CLK_PERIOD * 2.25);	// Release the reset away from a clock edge
-		tb_config1_n_reset	= 1'b1; 	// Deactivate the chip reset
-		
-		// Wait for a while to see normal operation
-		#(CLK_PERIOD);
-		
-		// Test 1: Check for Proper Reset w/ Idle input
-		@(negedge tb_clk); 
-		tb_config1_test_num = tb_config1_test_num + 1;
-		tb_config1_n_reset = 1'b0;
-		tb_config1_serial_in = 1'b1;
-		tb_config1_shift_en = 1'b0;
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			tb_config1_test_data[tb_config1_i] = 1'b1;
-		end
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			tb_config1_expected_out[tb_config1_i] = 1'b1;
-		end
-		#(CHECK_DELAY);
-		if (tb_config1_test_data == tb_config1_parallel_out)
-			$info("Scaled Size Case %0d:: PASSED", tb_config1_test_num);
-		else // Test case failed
-			$error("Scaled Size Case %0d:: FAILED", tb_config1_test_num);
-		
-		// Test 2: Check for Proper Reset w/ Active inputs
-		@(negedge tb_clk); 
-		tb_config1_test_num = tb_config1_test_num + 1;
-		tb_config1_n_reset = 1'b0;
-		tb_config1_serial_in = 1'b0;
-		tb_config1_shift_en = 1'b1;
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			tb_config1_test_data[tb_config1_i] = 1'b1;
-		end
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			tb_config1_expected_out[tb_config1_i] = 1'b1;
-		end
-		@(posedge tb_clk);
-		@(posedge tb_clk);
-		#(CHECK_DELAY);
-		if (tb_config1_test_data == tb_config1_parallel_out)
-			$info("Scaled Size Case %0d:: PASSED", tb_config1_test_num);
-		else // Test case failed
-			$error("Scaled Size Case %0d:: FAILED", tb_config1_test_num);
-		
-		// Test 3: Check for Proper Shift Enable Control w/ enable off
-		// Power-on Reset of the DUT (Best case conditions)
-		@(negedge tb_clk); 
-		tb_config1_test_num = tb_config1_test_num + 1;
-		tb_config1_serial_in = 1'b1;
-		tb_config1_shift_en = 1'b0;
-		tb_config1_n_reset	= 1'b0; 	
-		#(CLK_PERIOD * 2);
-		@(negedge tb_clk);	// Release the reset away from a clock edge
-		tb_config1_n_reset	= 1'b1;	// Deactivate the chip reset
-		// Perform test
-		tb_config1_serial_in = 1'b0;
-		tb_config1_shift_en = 1'b0;
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			tb_config1_test_data[tb_config1_i] = 1'b1;
-		end
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			tb_config1_expected_out[tb_config1_i] = 1'b1;
-		end
-		@(posedge tb_clk);
-		#(CHECK_DELAY);
-		if (tb_config1_test_data == tb_config1_parallel_out)
-			$info("Scaled Size Case %0d:: PASSED", tb_config1_test_num);
-		else // Test case failed
-			$error("Scaled Size Case %0d:: FAILED", tb_config1_test_num);
-		
-		// Test 4: Check for Proper Shift Enable Control w/ enable on for one shift
-		// Power-on Reset of the DUT (Best case conditions)
-		@(negedge tb_clk); 
-		tb_config1_test_num = tb_config1_test_num + 1;
-		tb_config1_serial_in = 1'b1;
-		tb_config1_shift_en = 1'b0;
-		tb_config1_n_reset	= 1'b0; 	
-		#(CLK_PERIOD * 2);
-		@(negedge tb_clk);	// Release the reset away from a clock edge
-		tb_config1_n_reset	= 1'b1;	// Deactivate the chip reset
-		// Perform test
-		tb_config1_serial_in = 1'b0;
-		tb_config1_shift_en = 1'b1;
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			if(CONFIG1_MAX_BIT == tb_config1_i) // MSB -> Most significant bit is the fireset one sent
-				tb_config1_test_data[tb_config1_i] = 1'b0;
+			// The next verification will include the previously shifted value
+			if(MSB)
+				expected_out = {expected_out[(MAX_BIT - 1):0], test_data[(MAX_BIT - shift_test_i)]};
 			else
-				tb_config1_test_data[tb_config1_i] = 1'b1;
-		end
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
+				expected_out = {test_data[(MAX_BIT - shift_test_i)], expected_out[(MAX_BIT):1]}; 
+		end 
+	   	@cb;
+		// Compare the final expected output with actual and track failure(s)
+		if (expected_out != cb.parallel_out)
 		begin
-			tb_config1_expected_out[tb_config1_i] = 1'b1;
-		end
-		@(posedge tb_clk);
-		#(CHECK_DELAY);
-		tb_config1_expected_out = {tb_config1_expected_out[(CONFIG1_MAX_BIT - 1):0], tb_config1_serial_in}; // Shift test data
-		if (tb_config1_expected_out == tb_config1_parallel_out)
-			$info("Scaled Size Case %0d:: PASSED", tb_config1_test_num);
-		else // Test case failed
-			$error("Scaled Size Case %0d:: FAILED", tb_config1_test_num);
-		
-		// Test 5: Check for Proper Shift Enable Control w/ enable on for full value shift
-		// Power-on Reset of the DUT (Best case conditions)
-		@(negedge tb_clk); 
-		tb_config1_test_num = tb_config1_test_num + 1;
-		tb_config1_serial_in = 1'b1;
-		tb_config1_shift_en = 1'b0;
-		tb_config1_n_reset	= 1'b0; 	
-		#(CLK_PERIOD * 2);
-		@(negedge tb_clk);	// Release the reset away from a clock edge
-		tb_config1_n_reset	= 1'b1;	// Deactivate the chip reset
-		// Prep for shifting
-		tb_config1_shift_en = 1'b1;
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			tb_config1_test_data[tb_config1_i] = 1'b0;
-		end
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			tb_config1_expected_out[tb_config1_i] = 1'b1;
-		end
-		// Shift through the full value and track failure(s)
-		tb_config1_fail_cnt = 0;
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			// Assign the new serial input value
-			tb_config1_serial_in = tb_config1_test_data[(CONFIG1_MAX_BIT - tb_config1_i)]; 
-			// Perform shift
-			@(posedge tb_clk);
-			#(CHECK_DELAY);
-			// Updated expected output calculation
-			tb_config1_expected_out = {tb_config1_expected_out[(CONFIG1_MAX_BIT - 1):0], tb_config1_serial_in}; 
-			// Compare expected output with actual and track failure(s)
-			if (tb_config1_expected_out != tb_config1_parallel_out)
-			begin
-				// Current shift failed
-				tb_config1_fail_cnt = tb_config1_fail_cnt + 1;
-			end
+			// Current shift failed
+			tb_fail_cnt = tb_fail_cnt + 1;
 		end
 		// Check for failure(s)
-		if(0 < tb_config1_fail_cnt)
+		if(0 < tb_fail_cnt)
 		begin
 			// Test failed
-			$error("Scaled Size Case %0d:: FAILED", tb_config1_test_num);
+			$error("%s Case %0d:: FAILED", NAME, tb_test_num);
 		end
 		else
 		begin
 			// Test passed
-			$info("Scaled Size Case %0d:: PASSED", tb_config1_test_num);
+			$info("%s Case %0d:: PASSED", NAME, tb_test_num);
 		end
-		
-		// Test 6: Check for Proper Shift Enable Control w/ enable on and mixed values
-		// Power-on Reset of the DUT (Best case conditions)
-		@(negedge tb_clk); 
-		tb_config1_test_num = tb_config1_test_num + 1;
-		tb_config1_serial_in = 1'b1;
-		tb_config1_shift_en = 1'b0;
-		tb_config1_n_reset	= 1'b0; 	
-		#(CLK_PERIOD * 2);
-		@(negedge tb_clk);	// Release the reset away from a clock edge
-		tb_config1_n_reset	= 1'b1;	// Deactivate the chip reset
-		// Prep for shifting
-		tb_config1_shift_en = 1'b1;
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			if(0 == (tb_config1_i % 2)) // Even bit
-				tb_config1_test_data[tb_config1_i] = 1'b1;
-			else // Odd bit
-				tb_config1_test_data[tb_config1_i] = 1'b0;
-		end
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			tb_config1_expected_out[tb_config1_i] = 1'b1;
-		end
-		// Shift through the full value and track failure(s)
-		tb_config1_fail_cnt = 0;
-		for(tb_config1_i = 0; tb_config1_i < CONFIG1_SIZE; tb_config1_i = tb_config1_i + 1)
-		begin
-			// Assign the new serial input value
-			tb_config1_serial_in = tb_config1_test_data[(CONFIG1_MAX_BIT - tb_config1_i)]; 
-			// Perform shift
-			@(posedge tb_clk);
-			#(CHECK_DELAY);
-			// Updated expected output calculation
-			tb_config1_expected_out = {tb_config1_expected_out[(CONFIG1_MAX_BIT - 1):0], tb_config1_serial_in}; 
-			// Compare expected output with actual and track failure(s)
-			if (tb_config1_expected_out != tb_config1_parallel_out)
-			begin
-				// Current shift failed
-				tb_config1_fail_cnt = tb_config1_fail_cnt + 1;
-			end
-		end
-		// Check for failure(s)
-		if(0 < tb_config1_fail_cnt)
-		begin
-			// Test failed
-			$error("Scaled Size Case %0d:: FAILED", tb_config1_test_num);
-		end
-		else
-		begin
-			// Test passed
-			$info("Scaled Size Case %0d:: PASSED", tb_config1_test_num);
-		end
-	end
-	
-	// LSB Configuration (4-bit LSB) Test bench main process
-	initial
-	begin
-		// Initialize all of the test inputs
-		tb_config2_n_reset		= 1'b1;		// Initialize to be inactive
-		tb_config2_serial_in	= 1'b1;		// Initialize to be idle
-		tb_config2_shift_en		= 1'b0;		// Initialize to be inactive
-		tb_config2_test_num 	= 0;
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			tb_config2_test_data[tb_config2_i] = 1'b1;
-		end
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			tb_config2_expected_out[tb_config2_i] = 1'b1;
-		end
-		
-		// Power-on Reset of the DUT
-		#(0.1);
-		tb_config2_n_reset	= 1'b0; 	// Need to actually toggle this in order for it to actually run dependent always blocks
-		#(CLK_PERIOD * 2.25);	// Release the reset away from a clock edge
-		tb_config2_n_reset	= 1'b1; 	// Deactivate the chip reset
-		
-		// Wait for a while to see normal operation
-		#(CLK_PERIOD);
-		
-		// Test 1: Check for Proper Reset w/ Idle input
-		@(negedge tb_clk); 
-		tb_config2_test_num = tb_config2_test_num + 1;
-		tb_config2_n_reset = 1'b0;
-		tb_config2_serial_in = 1'b1;
-		tb_config2_shift_en = 1'b0;
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			tb_config2_test_data[tb_config2_i] = 1'b1;
-		end
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			tb_config2_expected_out[tb_config2_i] = 1'b1;
-		end
-		#(CHECK_DELAY);
-		if (tb_config2_test_data == tb_config2_parallel_out)
-			$info("LSB Case %0d:: PASSED", tb_config2_test_num);
-		else // Test case failed
-			$error("LSB Case %0d:: FAILED", tb_config2_test_num);
-		
-		// Test 2: Check for Proper Reset w/ Active inputs
-		@(negedge tb_clk); 
-		tb_config2_test_num = tb_config2_test_num + 1;
-		tb_config2_n_reset = 1'b0;
-		tb_config2_serial_in = 1'b0;
-		tb_config2_shift_en = 1'b1;
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			tb_config2_test_data[tb_config2_i] = 1'b1;
-		end
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			tb_config2_expected_out[tb_config2_i] = 1'b1;
-		end
-		@(posedge tb_clk);
-		@(posedge tb_clk);
-		#(CHECK_DELAY);
-		if (tb_config2_test_data == tb_config2_parallel_out)
-			$info("LSB Case %0d:: PASSED", tb_config2_test_num);
-		else // Test case failed
-			$error("LSB Case %0d:: FAILED", tb_config2_test_num);
-		
-		// Test 3: Check for Proper Shift Enable Control w/ enable off
-		// Power-on Reset of the DUT (Best case conditions)
-		@(negedge tb_clk); 
-		tb_config2_test_num = tb_config2_test_num + 1;
-		tb_config2_serial_in = 1'b1;
-		tb_config2_shift_en = 1'b0;
-		tb_config2_n_reset	= 1'b0; 	
-		#(CLK_PERIOD * 2);
-		@(negedge tb_clk);	// Release the reset away from a clock edge
-		tb_config2_n_reset	= 1'b1;	// Deactivate the chip reset
-		// Perform test
-		tb_config2_serial_in = 1'b0;
-		tb_config2_shift_en = 1'b0;
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			tb_config2_test_data[tb_config2_i] = 1'b1;
-		end
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			tb_config2_expected_out[tb_config2_i] = 1'b1;
-		end
-		@(posedge tb_clk);
-		#(CHECK_DELAY);
-		if (tb_config2_test_data == tb_config2_parallel_out)
-			$info("LSB Case %0d:: PASSED", tb_config2_test_num);
-		else // Test case failed
-			$error("LSB Case %0d:: FAILED", tb_config2_test_num);
-		
-		// Test 4: Check for Proper Shift Enable Control w/ enable on for one shift
-		// Power-on Reset of the DUT (Best case conditions)
-		@(negedge tb_clk); 
-		tb_config2_test_num = tb_config2_test_num + 1;
-		tb_config2_serial_in = 1'b1;
-		tb_config2_shift_en = 1'b0;
-		tb_config2_n_reset	= 1'b0; 	
-		#(CLK_PERIOD * 2);
-		@(negedge tb_clk);	// Release the reset away from a clock edge
-		tb_config2_n_reset	= 1'b1;	// Deactivate the chip reset
-		// Perform test
-		tb_config2_serial_in = 1'b0;
-		tb_config2_shift_en = 1'b1;
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			if(0 == tb_config2_i) // LSB -> Least significant bit is the fireset one sent
-				tb_config2_test_data[tb_config2_i] = 1'b0;
-			else
-				tb_config2_test_data[tb_config2_i] = 1'b1;
-		end
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			tb_config2_expected_out[tb_config2_i] = 1'b1;
-		end
-		@(posedge tb_clk);
-		#(CHECK_DELAY);
-		tb_config2_expected_out = {tb_config2_serial_in, tb_config2_expected_out[CONFIG2_MAX_BIT:1]}; // Shift test data LSB
-		if (tb_config2_expected_out == tb_config2_parallel_out)
-			$info("LSB Case %0d:: PASSED", tb_config2_test_num);
-		else // Test case failed
-			$error("LSB Case %0d:: FAILED", tb_config2_test_num);
-		
-		// Test 5: Check for Proper Shift Enable Control w/ enable on for full value shift
-		// Power-on Reset of the DUT (Best case conditions)
-		@(negedge tb_clk); 
-		tb_config2_test_num = tb_config2_test_num + 1;
-		tb_config2_serial_in = 1'b1;
-		tb_config2_shift_en = 1'b0;
-		tb_config2_n_reset	= 1'b0; 	
-		#(CLK_PERIOD * 2);
-		@(negedge tb_clk);	// Release the reset away from a clock edge
-		tb_config2_n_reset	= 1'b1;	// Deactivate the chip reset
-		// Prep for shifting
-		tb_config2_shift_en = 1'b1;
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			tb_config2_test_data[tb_config2_i] = 1'b0;
-		end
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			tb_config2_expected_out[tb_config2_i] = 1'b1;
-		end
-		// Shift through the full value and track failure(s)
-		tb_config2_fail_cnt = 0;
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			// Assign the new serial input value
-			tb_config2_serial_in = tb_config2_test_data[tb_config2_i]; // LSB -> Least significant sent fireset
-			// Perform shift
-			@(posedge tb_clk);
-			#(CHECK_DELAY);
-			// Updated expected output calculation
-			tb_config2_expected_out = {tb_config2_serial_in, tb_config2_expected_out[CONFIG2_MAX_BIT:1]}; // Shift test data LSB
-			// Compare expected output with actual and track failure(s)
-			if (tb_config2_expected_out != tb_config2_parallel_out)
-			begin
-				// Current shift failed
-				tb_config2_fail_cnt = tb_config2_fail_cnt + 1;
-			end
-		end
-		// Check for failure(s)
-		if(0 < tb_config2_fail_cnt)
-		begin
-			// Test failed
-			$error("LSB Case %0d:: FAILED", tb_config2_test_num);
-		end
-		else
-		begin
-			// Test passed
-			$info("LSB Case %0d:: PASSED", tb_config2_test_num);
-		end
-		
-		// Test 6: Check for Proper Shift Enable Control w/ enable on and mixed values
-		// Power-on Reset of the DUT (Best case conditions)
-		@(negedge tb_clk); 
-		tb_config2_test_num = tb_config2_test_num + 1;
-		tb_config2_serial_in = 1'b1;
-		tb_config2_shift_en = 1'b0;
-		tb_config2_n_reset	= 1'b0; 	
-		#(CLK_PERIOD * 2);
-		@(negedge tb_clk);	// Release the reset away from a clock edge
-		tb_config2_n_reset	= 1'b1;	// Deactivate the chip reset
-		// Prep for shifting
-		tb_config2_shift_en = 1'b1;
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			if(0 == (tb_config2_i % 2)) // Even bit
-				tb_config2_test_data[tb_config2_i] = 1'b1;
-			else // Odd bit
-				tb_config2_test_data[tb_config2_i] = 1'b0;
-		end
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			tb_config2_expected_out[tb_config2_i] = 1'b1;
-		end
-		// Shift through the full value and track failure(s)
-		tb_config2_fail_cnt = 0;
-		for(tb_config2_i = 0; tb_config2_i < CONFIG2_SIZE; tb_config2_i = tb_config2_i + 1)
-		begin
-			// Assign the new serial input value
-			tb_config2_serial_in = tb_config2_test_data[tb_config2_i]; // LSB -> Least significant sent fireset
-			// Perform shift
-			@(posedge tb_clk);
-			#(CHECK_DELAY);
-			// Updated expected output calculation
-			tb_config2_expected_out = {tb_config2_serial_in, tb_config2_expected_out[CONFIG2_MAX_BIT:1]}; // Shift test data LSB
-			// Compare expected output with actual and track failure(s)
-			if (tb_config2_expected_out != tb_config2_parallel_out)
-			begin
-				// Current shift failed
-				tb_config2_fail_cnt = tb_config2_fail_cnt + 1;
-			end
-		end
-		// Check for failure(s)
-		if(0 < tb_config2_fail_cnt)
-		begin
-			// Test failed
-			$error("LSB Case %0d:: FAILED", tb_config2_test_num);
-		end
-		else
-		begin
-			// Test passed
-			$info("LSB Case %0d:: PASSED", tb_config2_test_num);
-		end
-	end
-	
+	endtask
 endmodule

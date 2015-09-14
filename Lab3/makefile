@@ -355,6 +355,7 @@ mapped/%.v: source/%.sv $(addprefix source/,$(DEP_SUB_FILES))
 	@echo "\nRemember to check $*.log for latches and timing arcs"
 	@echo "Synthesis run complete for design: $@\n\n"
 
+
 ##############################################################################
 # Define the synthesis commands to use
 ##############################################################################
@@ -397,4 +398,6 @@ syn_mapped do_mapping.tcl:
 	@echo -e '$(subst $(newline),\n,$(subst \n,\\n,${SYN_CMDS}))' > do_mapping.tcl
 	$(DC_SHELL) -x "source -echo do_mapping.tcl"
 	@echo -e "Done\n\n"
+
+
 
