@@ -22,7 +22,7 @@ module flex_counter
     );
 
    genvar      i;
-   reg [NUM_BITS-1:0] parallel_in_reg;
+   reg [NUM_CNT_BITS-1:0] parallel_in_reg;
    
 
    always_ff @ (posedge clk, negedge n_rst)
@@ -55,13 +55,12 @@ module flex_counter
 		       count_out <= count_out + 1;
 		       rollover_flag <= 1'b0;
 		    end
-	       end
+	       end // else: !if(clear == 1'b1)
 	  end // if (count_enable == 1'b1)
 	else
 	  begin
 	     count_out <= count_out;
 	  end
 	
-     end
-
+     end // always_ff @ (posedge clk, negedge n_rst)
 endmodule
