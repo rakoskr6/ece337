@@ -1,14 +1,14 @@
 // $Id: $
-// File name:   tb_flex_counter.sv.sv
+// File name:   tb_mealy.sv
 // Created:     9/2/2013
 // Author:      Kyle Rakos
 // Lab Section: 99
 // Version:     1.0  Initial Design Entry
-// Description: Moore Machine 1101 detector test bench
+// Description: Mealy Machine 1101 detector test bench
 
 `timescale 1ns / 10ps
 
-module tb_moore();
+module tb_mealy();
 
    // Define parameters
    // basic test bench parameters
@@ -34,7 +34,7 @@ module tb_moore();
    // Default Config Test Variables & constants
 
 
-  moore DUT
+  mealy DUT
     (
      .clk(tb_clk),
      .n_rst(tb_n_rst),
@@ -111,9 +111,9 @@ module tb_moore();
 	
 	cb.i <= 1'b1;
 	@cb;
-	@cb;
 	
-	
+	tb_test_num = 2;
+		
 	if (cb.o == 1'b1)
 	  $info("Test Case %0d:: PASSED", tb_test_num);
 	else // Test case failed
@@ -132,8 +132,7 @@ module tb_moore();
 	
 	cb.i <= 1'b1;
 	@cb;
-	@cb;
-	
+		
 	
 	if (cb.o == 1'b1)
 	  $info("Test Case %0d:: PASSED", tb_test_num);
@@ -148,5 +147,5 @@ module tb_moore();
      end // initial begin
    
 
-endmodule // tb_moore_DUT
+endmodule // tb_mealy_DUT
 
