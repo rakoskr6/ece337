@@ -1,0 +1,64 @@
+Source Results:
+Total Score: 13.08/30.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 1: 1.000/1.000
+  Test case 2: 8.000/8.000
+  Test case 3: 2.080/4.000
+   Correct framing_error value found for packet 1 in test case with multiple normal packets
+   Correct data_ready value found for packet 1 of test case with multiple normal packets
+   Correct rx_data value found for packet 1 of test case with multiple normal packets
+   Correct overrun_error value found for packet 1 of test case with multiple normal packets
+   Correct framing_error value found for packet 2 in test case with multiple normal packets
+   Correct data_ready value found for packet 2 of test case with multiple normal packets
+   Incorrect rx_data value found for packet 2 of test case with multiple normal packets
+   Incorrect overrun_error value found for packet 2 of test case with multiple normal packets
+   Correct framing_error value found for packet 3 in test case with multiple normal packets
+   Correct data_ready value found for packet 3 of test case with multiple normal packets
+   Incorrect rx_data value found for packet 3 of test case with multiple normal packets
+   Incorrect overrun_error value found for packet 3 of test case with multiple normal packets
+   Correct framing_error value found for packet 4 in test case with multiple normal packets
+   Correct data_ready value found for packet 4 of test case with multiple normal packets
+   Incorrect rx_data value found for packet 4 of test case with multiple normal packets
+   Incorrect overrun_error value found for packet 4 of test case with multiple normal packets
+  Test case 4: 2.000/2.000
+As this is supposed to be used to grade a functional design that you have
+already throughly tested, the more advanced test cases will not contribute
+points to your score until all of the Basic test cases are 100% satisfied.
+Additionally the results of the more advanced test cases will not be reported
+to you until all of the Basic test cases are 100% satisfied.
+
+Mapped Results:
+Total Score: 6.40/30.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 1: 1.000/1.000
+  Test case 2: 1.920/8.000
+   Correct framing_error value found for packet 1 in test case with 1 normal packet
+   Incorrect data_ready value found for packet 1 of test case with 1 normal packet
+   Incorrect rx_data value found for packet 1 of test case with 1 normal packet
+   Correct overrun_error value found for packet 1 of test case with 1 normal packet
+  Test case 3: 1.480/4.000
+   Correct framing_error value found for packet 1 in test case with multiple normal packets
+   Incorrect data_ready value found for packet 1 of test case with multiple normal packets
+   Correct rx_data value found for packet 1 of test case with multiple normal packets
+   Correct overrun_error value found for packet 1 of test case with multiple normal packets
+   Correct framing_error value found for packet 2 in test case with multiple normal packets
+   Incorrect data_ready value found for packet 2 of test case with multiple normal packets
+   Incorrect rx_data value found for packet 2 of test case with multiple normal packets
+   Correct overrun_error value found for packet 2 of test case with multiple normal packets
+   Correct framing_error value found for packet 3 in test case with multiple normal packets
+   Incorrect data_ready value found for packet 3 of test case with multiple normal packets
+   Incorrect rx_data value found for packet 3 of test case with multiple normal packets
+   Correct overrun_error value found for packet 3 of test case with multiple normal packets
+   Correct framing_error value found for packet 4 in test case with multiple normal packets
+   Incorrect data_ready value found for packet 4 of test case with multiple normal packets
+   Incorrect rx_data value found for packet 4 of test case with multiple normal packets
+   Correct overrun_error value found for packet 4 of test case with multiple normal packets
+  Test case 4: 2.000/2.000
+As this is supposed to be used to grade a functional design that you have
+already throughly tested, the more advanced test cases will not contribute
+points to your score until all of the Basic test cases are 100% satisfied.
+Additionally the results of the more advanced test cases will not be reported
+to you until all of the Basic test cases are 100% satisfied.
+
