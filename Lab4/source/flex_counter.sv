@@ -32,12 +32,17 @@ module flex_counter
 	     rollover_flag <= 1'b0;
 	     count_out <= 0;
 	  end
+	
+
+	// else state = next state
+
+//always_comb
 	else if (count_enable == 1'b1)
 	  begin
 	     if (clear == 1'b1)
 	       begin
 		  count_out <= 0;
-		  rollover_flag <= 0;
+		  rollover_flag <= 1'b0;
 		  
 	       end
 	     else
@@ -65,4 +70,6 @@ module flex_counter
 	  end
 	
      end // always_ff @ (posedge clk, negedge n_rst)
+
+//always comb output
 endmodule
