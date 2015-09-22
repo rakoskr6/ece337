@@ -12,7 +12,7 @@ module rcv_block
    input n_rst,
    input serial_in,
    input data_read,
-   output [7:0] rx_data,
+   output reg [7:0] rx_data,
    output data_ready,
    output overrun_error,
    output framing_error

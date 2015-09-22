@@ -19,7 +19,7 @@ module rcu
    output enable_timer
    );
 
-   typedef enum logic [2:0] {init, ReadData, Check, Receive, Load}
+   typedef enum logic [2:0] {init, Pause, ReadData, Check, Receive, Load}
    state_type;
    state_type state, nextstate;
 
@@ -43,10 +43,15 @@ always_ff @(posedge clk, negedge n_rst)
 	  init:
 	    begin
 	       if (start_bit_detected == 1'b1)
-		 nextstate = ReadData;
+		 nextstate = Pause;
 	       else
 		 nextstate = init;
 
+	    end
+
+	  Pause:
+	    begin
+	       nextstate = ReadData;
 	    end
 
 	  ReadData:
@@ -69,7 +74,9 @@ always_ff @(posedge clk, negedge n_rst)
 	    end
 
 	  Load:
-	    nextstate = init;
+	    begin
+	       nextstate = init;
+	    end
 	  
 	endcase // case (state)
      end // always_comb begin
