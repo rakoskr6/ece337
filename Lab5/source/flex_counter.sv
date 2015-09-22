@@ -37,8 +37,6 @@ module flex_counter
 	     if (clear == 1'b1)
 	       begin
 		  count_out <= 0;
-		  rollover_flag <= 0;
-		  
 	       end
 	     else
 	       begin
