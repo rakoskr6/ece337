@@ -21,6 +21,6 @@ module sr_9bit
    assign packet_data = all_data[7:0];
    assign stop_bit = all_data[8];
    
-   flex_stp_sr #(.NUM_BITS(8),.SHIFT_MSB(0)) DUT(.clk(clk), .n_rst(n_rst), .shift_enable(shift_strobe), .serial_in(serial_in), .parallel_out(all_data));
+   flex_stp_sr #(.NUM_BITS(9),.SHIFT_MSB(0)) DUT(.clk(clk), .n_rst(n_rst), .shift_enable(shift_strobe), .serial_in(serial_in), .parallel_out(all_data));
 
 endmodule // sr_9bit

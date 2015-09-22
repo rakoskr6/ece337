@@ -40,7 +40,8 @@ module rcv_block
 
    timer DUT5 (.clk(clk), .n_rst(n_rst), .enable_timer(enable_timer), .shift_strobe(shift_strobe), .packet_done(packet_done));
 
-   start_bit_det DUT6 (.clk(clk), .n_rst(n_rst), .serial_in(serial_in), .start_bit_detected(start_bit_detected))
+   start_bit_det DUT6 (.clk(clk), .n_rst(n_rst), .serial_in(serial_in), .start_bit_detected(start_bit_detected));
+   
 
    
 

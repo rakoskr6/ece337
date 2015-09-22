@@ -115,36 +115,36 @@ module tb_rcv_block();
 		
 		// Data recieved should match the data sent
 		assert(expected_rx_data == tb_rx_data)
-			$info("Test case %0d: Test data correctly received", tb_test_case);
+			$info("Test case %0d: Test data correctly received - CORRECT", tb_test_case);
 		else
-			$error("Test case %0d: Test data was not correctly received", tb_test_case);
+			$error("Test case %0d: Test data was not correctly received - ERROR", tb_test_case);
 			
 		// If and only if a proper stop bit is sent ('1') there shouldn't be a framing error.
 		assert(expected_framing_error == tb_framing_error)
-			$info("Test case %0d: DUT correctly shows no framing error", tb_test_case);
+			$info("Test case %0d: DUT correctly shows no framing error - CORRECT", tb_test_case);
 		else
-			$error("Test case %0d: DUT incorrectly shows a framing error", tb_test_case);
+			$error("Test case %0d: DUT incorrectly shows a framing error - ERROR", tb_test_case);
 		
 		// If and only if a proper stop bit is sent ('1') should there be 'data ready'
 		assert(expected_data_ready == tb_data_ready)
-			$info("Test case %0d: DUT correctly asserted the data ready flag", tb_test_case);
+			$info("Test case %0d: DUT correctly asserted the data ready flag - CORRECT", tb_test_case);
 		else
-			$error("Test case %0d: DUT did not correctly assert the data ready flag", tb_test_case);
+			$error("Test case %0d: DUT did not correctly assert the data ready flag -ERROR ", tb_test_case);
 			
 		// Check for the proper overrun error state for this test case
 		if(1'b0 == expected_overrun)
 		begin
 			assert(1'b0 == tb_overrun_error)
-				$info("Test case %0d: DUT correctly shows no overrun error", tb_test_case);
+				$info("Test case %0d: DUT correctly shows no overrun error - CORRECT", tb_test_case);
 			else
-				$error("Test case %0d: DUT incorrectly shows an overrun error", tb_test_case);
+				$error("Test case %0d: DUT incorrectly shows an overrun error - ERROR", tb_test_case);
 		end
 		else
 		begin
 			assert(1'b1 == tb_overrun_error)
-				$info("Test case %0d: DUT correctly shows an overrun error", tb_test_case);
+				$info("Test case %0d: DUT correctly shows an overrun error - CORRECT", tb_test_case);
 			else
-				$error("Test case %0d: DUT incorrectly shows no overrun error", tb_test_case);
+				$error("Test case %0d: DUT incorrectly shows no overrun error - ERROR", tb_test_case);
 		end
 		
 		// Handle the case of the test case asserting the data read signal
@@ -163,9 +163,9 @@ module tb_rcv_block();
 			
 			// Check to see if the data ready flag cleared
 			assert(1'b0 == tb_data_ready)
-				$info("Test case %0d: DUT correctly cleared the data ready flag", tb_test_case);
+				$info("Test case %0d: DUT correctly cleared the data ready flag - CORRECT", tb_test_case);
 			else
-				$error("Test case %0d: DUT did not correctly clear the data ready flag", tb_test_case);
+				$error("Test case %0d: DUT did not correctly clear the data ready flag - ERROR", tb_test_case);
 		end
 	end
 	endtask

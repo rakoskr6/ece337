@@ -15,10 +15,14 @@ module timer
    output packet_done
    );
 
-   flex_counter #(.NUM_CNT_BITS(4)) DUT1(.clk(clk), .n_rst(n_rst), .clear(packet_done), .count_enable(enable_timer), .rollover_val(10), .count_out(), .rollover_flag(shift_strobe));
+   reg [3:0] rollover_val1 = 10;
+   reg [3:0] rollover_val2 = 9;
+   
+
+   flex_counter #(.NUM_CNT_BITS(4)) DUT1(.clk(clk), .n_rst(n_rst), .clear(packet_done), .count_enable(enable_timer), .rollover_val(rollover_val1), .count_out(), .rollover_flag(shift_strobe));
 
    
-    flex_counter #(.NUM_CNT_BITS(4)) DUT2(.clk(clk), .n_rst(n_rst), .clear(packet_done), .count_enable(shift_strobe), .rollover_val(9), .count_out(), .rollover_flag(packet_done));
+    flex_counter #(.NUM_CNT_BITS(4)) DUT2(.clk(clk), .n_rst(n_rst), .clear(packet_done), .count_enable(shift_strobe), .rollover_val(rollover_val2), .count_out(), .rollover_flag(packet_done));
 
 			
 endmodule		

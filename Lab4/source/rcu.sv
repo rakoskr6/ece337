@@ -67,6 +67,10 @@ always_ff @(posedge clk, negedge n_rst)
 	       else
 		 nextstate = Load;
 	    end
+
+	  Load:
+	    nextstate = init;
+	  
 	endcase // case (state)
      end // always_comb begin
 
