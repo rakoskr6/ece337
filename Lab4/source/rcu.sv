@@ -26,7 +26,7 @@ module rcu
    
 always_ff @(posedge clk, negedge n_rst)
   begin
-     if (n_rst == 0)
+     if (n_rst == 1'b0)
        begin
 	  state <= init;
        end
@@ -82,7 +82,7 @@ always_ff @(posedge clk, negedge n_rst)
      end // always_comb begin
 
    // output logic
-   assign sbc_clear = (state == ReadData);
+   assign sbc_clear = (state == Pause);
    assign sbc_enable = (state == Check);
    assign load_buffer = (state == Load);
    assign enable_timer = (state == ReadData);
