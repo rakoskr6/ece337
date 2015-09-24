@@ -21,6 +21,10 @@ module flex_counter
     output reg rollover_flag
     );
 
+   genvar      i;
+   reg [NUM_CNT_BITS-1:0] parallel_in_reg;
+   
+
    always_ff @ (posedge clk, negedge n_rst)
      begin
 	if(1'b0 == n_rst)
@@ -28,37 +32,44 @@ module flex_counter
 	     rollover_flag <= 1'b0;
 	     count_out <= 0;
 	  end
-	else if (clear == 1'b1)
-	  begin
-	     count_out <= 0;
-	     rollover_flag <= 1'b0;
-	  end
+	
 
+	// else state = next state
+
+//always_comb
 	else if (count_enable == 1'b1)
 	  begin
-	     if (count_out >= rollover_val)
+	     if (clear == 1'b1)
 	       begin
+		  count_out <= 0;
 		  rollover_flag <= 1'b0;
-		  count_out <= 1;
+		  
 	       end
-	     else if (count_out == rollover_val - 1)
-	       begin
-		  count_out <= count_out + 1;
-		  rollover_flag <= 1'b1;
-	       end		       
 	     else
 	       begin
-		  count_out <= count_out + 1;
-		  rollover_flag <= 1'b0;
-	       end
+		  if (count_out >= rollover_val)
+		    begin
+		       rollover_flag <= 1'b0;
+		       count_out <= 1;
+		    end
+		  else if (count_out == rollover_val - 1)
+		    begin
+		       count_out <= count_out + 1;
+		       rollover_flag <= 1'b1;
+		    end		       
+		  else
+		    begin
+		       count_out <= count_out + 1;
+		       rollover_flag <= 1'b0;
+		    end
+	       end // else: !if(clear == 1'b1)
 	  end // if (count_enable == 1'b1)
-	
 	else
 	  begin
 	     count_out <= count_out;
-	     rollover_flag <= rollover_flag;
-	  end // else: !if(count_enable == 1'b1)
+	  end
+	
      end // always_ff @ (posedge clk, negedge n_rst)
 
-   //always comb output
+//always comb output
 endmodule
