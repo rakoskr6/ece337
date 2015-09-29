@@ -29,7 +29,7 @@ module fir_filter
    wire [3:0] 	      src2;
    wire [3:0] 	      dest;
    wire 	      overflow;
-   wire 	      outreg_data;
+   wire [16:0]	      outreg_data;
    
    
    

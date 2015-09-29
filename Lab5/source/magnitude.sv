@@ -8,7 +8,7 @@
 
 module magnitude
   (
-   input wire [16:0] in,
+   input  wire signed [16:0] in,
    output wire [15:0] out
    );
 

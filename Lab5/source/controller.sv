@@ -73,7 +73,7 @@ always_ff @(posedge clk, negedge n_reset)
 	       else
 		 begin
 		    //reg[3] = data
-		    
+		    nextstate = zero;
 		 end
 	    end
 
@@ -198,7 +198,7 @@ always_ff @(posedge clk, negedge n_reset)
 	    begin
 	       if (lc == 1'b1)
 		 begin
-		    nextstate = lc1;
+		    nextstate = lc2;
 		 end
 	       else
 		 begin
@@ -261,8 +261,12 @@ always_ff @(posedge clk, negedge n_reset)
 	err = 1'b0;
 
 	//cnt_up
-	if (state == zero) cnt_up = 1;
+	if (state == zero) 
+	  begin
+	     
 
+	     cnt_up = 1;
+	  end
 	//clear
 	if (state == lc1 || state == lc2 || state == lc3 || state == lc4)
 	  begin
@@ -270,7 +274,7 @@ always_ff @(posedge clk, negedge n_reset)
 	  end
 
 	//modwait
-	if (state == idle || state == wait1 || state == wait2 || state == wait3)
+	if (state == idle || state == eidle || state == wait1 || state == wait2 || state == wait3)
 	  begin
 	     modwait = 1'b0;
 	  end
@@ -289,6 +293,7 @@ always_ff @(posedge clk, negedge n_reset)
 	else if (state == sort2) src1 = 3;
 	else if (state == sort3) src1 = 4;
 	else if (state == sort4) src1 = 5;
+	else if (state == zero) src1 = 0;
 	else if (state == mul1) src1 = 1;
 	else if (state == add1) src1 = 0;
 	else if (state == mul2) src1 = 2;
@@ -303,6 +308,7 @@ always_ff @(posedge clk, negedge n_reset)
 	else if (state == sort2) src2 = 0;
 	else if (state == sort3) src2 = 0;
 	else if (state == sort4) src2 = 0;
+	else if (state == zero) src2 = 0;
 	else if (state == mul1) src2 = 10;
 	else if (state == add1) src2 = 6;
 	else if (state == mul2) src2 = 9;
@@ -314,7 +320,7 @@ always_ff @(posedge clk, negedge n_reset)
 
 	
 	//dest
-	if (state == store) dest = 3;
+	if (state == store) dest = 5;
 	else if (state == zero) dest = 0;
 	else if (state == sort1)  dest = 1;
 	else if (state == sort2) dest = 2;
