@@ -16,12 +16,12 @@ include /home/ecegrid/a/ece337/Course_Prod/course_make_vars
 # (do not include the source folder in the name)
 # NOTE: YOU WILL NEED TO SET THIS VARIABLE'S VALUE WHEN WORKING WITH HEIRARCHICAL DESIGNS
 # AND THE AUTOMATED GRADING SYSTEM
-COMPONENT_FILES	:= 
+COMPONENT_FILES	:= counter.sv flex_counter.sv controller.sv sync.sv magnitude.sv
 
 # Specify the name of the top level file (do not include the source folder in the name)
 # NOTE: YOU WILL NEED TO SET THIS VARIABLE'S VALUE WHEN WORKING WITH HEIRARCHICAL DESIGNS
 # AND THE AUTOMATED GRADING SYSTEM
-TOP_LEVEL_FILE	:= 
+TOP_LEVEL_FILE	:= fir_filter.sv
 
 # Specify the filepath of the test bench you want to use (ie. tb_top_level.sv)
 # (do not include the source folder in the name)
@@ -43,7 +43,7 @@ M_WORK_LIB := mapped_work
 
 LIB_CREATE	:= vlib
 COMPILE 		:= vlog -sv
-SIMULATE		:= vsim -Lf $(LABS_IP_LIB) -L $(GATE_LIB) -L $(GOLD_LIB) +no_glitch_msg -coverage -voptargs="+acc"
+SIMULATE		:= vsim -Lf $(LABS_IP_LIB) -L $(GATE_LIB) -L $(GOLD_LIB) +no_glitch_msg -coverage -novopt
 DC_SHELL		:= dc_shell-t
 
 ##############################################################################
@@ -57,10 +57,10 @@ DC_SHELL		:= dc_shell-t
 # Designate targets that do not correspond directly to files so that they are
 # run every time they are called
 ##############################################################################
-.PHONY: help clean veryclean
-.PHONY: print_vars
-.PHONY: sim_full_source sim_full_mapped
-.PHONY: syn_mapped
+.phony: help clean veryclean
+.phony: print_vars
+.phony: sim_full_source sim_full_mapped
+.phony: syn_mapped
 
 ##############################################################################
 # Make the default target (the one called when no specific one is invoked) to
@@ -126,7 +126,6 @@ clean:
 	@rm -f *.wlf *.svf transcript
 	@rm -f *.tran
 	@rm -f *.scomp *.mcomp
-	@rm -f do_mapping.tcl
 	@echo -e "Done\n\n"
 
 veryclean:
@@ -205,6 +204,11 @@ define CONSOLE_SIM_CMDS
 "run 15 us;	\
  quit -f"
 endef
+
+# This rule defines how to simulate the source form of the full design with the custom file io test bench
+sim_image: $(addprefix $(S_WORK_LIB)/, $(basename $(TOP_LEVEL_FILE) tb_fir_image.sv $(COMPONENT_FILES)))
+	@echo -e "Simulating Source Design with image file test bench"
+	@$(SIMULATE) -i -t ps -do "source ./scripts/image_waves.do; run 240ms" $(S_WORK_LIB).tb_fir_image
 
 # This rule defines how to simulate the source form of the full design
 sim_full_source: $(addprefix $(S_WORK_LIB)/, $(notdir $(basename $(TOP_LEVEL_FILE) $(TEST_BENCH) $(TB_HELPER_FILES) $(COMPONENT_FILES))))
