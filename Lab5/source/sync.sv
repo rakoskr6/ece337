@@ -14,19 +14,25 @@ module sync
    output reg sync_out
    );
 
+   reg InterFF;
+   
+
    always_ff @ (posedge clk, negedge n_rst) begin
 	if(1'b0 == n_rst)
 	  begin
-	     sync_out = 0;
-
+	     sync_out <= 0;
+	     InterFF <= 0;
+	     
 	  end
-	else if (async_in==1 || async_in==0)
+	else //if (async_in==1 || async_in==0)
 	  begin
-	     sync_out = async_in;
-	     if (sync_out != 0 && sync_out != 1)
-	       begin
-		  sync_out = 0;
-	       end
+	     InterFF <= async_in;
+	     sync_out <= InterFF;
+	     
+	     //if (sync_out != 0 && sync_out != 1)
+	       //begin
+		 // sync_out = 0;
+	       //end
 	  end
 	
 	

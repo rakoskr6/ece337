@@ -24,9 +24,12 @@ module controller
    );
 
    typedef enum logic [4:0] {idle, store, zero, sort1, sort2, sort3, sort4,
-			     mul1, add1, mul2, sub1, mul3, add2, mul4, sub2,
+			     mul1, add1, mul2, sub1, mul3, add2, mul4, sub2, nop,
 			     eidle,lc1,wait1,lc2,wait2,lc3,wait3,lc4} state_type;
    state_type state, nextstate;
+
+   reg 	next_modwait;
+   reg 	next_err;
    
       
 always_ff @(posedge clk, negedge n_reset)
@@ -34,11 +37,17 @@ always_ff @(posedge clk, negedge n_reset)
      if (n_reset == 0)
        begin
 	  state <= idle;
-
+	  modwait <= 0;
+	  err <= 0;
+	  
+	  
        end
      else
        begin
 	  state <= nextstate;
+	  modwait <= next_modwait;
+	  err <= next_err;
+	  
        end
   end // always_ff @ (posedge clk, negedge n_rst)
 
@@ -173,9 +182,15 @@ always_ff @(posedge clk, negedge n_reset)
 		 end
 	       else
 		 begin
-		    nextstate = idle;
+		    nextstate = nop;
 		 end
+	    end // case: sub2
+
+	  nop:
+	    begin
+	       nextstate = idle;
 	    end
+	  
 
 	  eidle:
 	    begin
@@ -253,18 +268,16 @@ always_ff @(posedge clk, negedge n_reset)
      begin
 	cnt_up = 1'b0;
 	clear = 1'b0;
-	modwait = 1'b1; //default 1
+	next_modwait = 1'b1; //default 1
 	op = 3'b000;
 	src1 = 4'b0000;
 	src2 = 4'b0000;
 	dest = 4'b0000;
-	err = 1'b0;
+	next_err = 1'b0;
 
 	//cnt_up
 	if (state == zero) 
 	  begin
-	     
-
 	     cnt_up = 1;
 	  end
 	//clear
@@ -274,9 +287,9 @@ always_ff @(posedge clk, negedge n_reset)
 	  end
 
 	//modwait
-	if (state == idle || state == eidle || state == wait1 || state == wait2 || state == wait3)
+	if (nextstate == idle || nextstate == eidle || nextstate == wait1 || nextstate == wait2 || nextstate == wait3)
 	  begin
-	     modwait = 1'b0;
+	     next_modwait = 1'b0;
 	  end
 
 	//op codes
@@ -340,7 +353,7 @@ always_ff @(posedge clk, negedge n_reset)
 	else if (state == lc4) dest = 10;
 
 	//err
-	if (state == eidle) err = 1'b1;
+	if (nextstate == eidle) next_err = 1'b1;
 	
 	
      end // always_comb end

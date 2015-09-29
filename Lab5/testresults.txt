@@ -1,0 +1,70 @@
+Source Results:
+Total Score: 60.00/60.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 1: 2.000/2.000
+  Test case 2: 1.000/1.000
+  Test case 3: 1.000/1.000
+  Test case 4: 3.000/3.000
+  Test case 5: 3.000/3.000
+  Test case 6: 4.000/4.000
+  Test case 7: 4.000/4.000
+  Test case 8: 4.000/4.000
+  Test case 9: 4.000/4.000
+  Test case 10: 4.000/4.000
+ Results for error test cases:
+  Test case 1: 6.000/6.000
+  Test case 2: 6.000/6.000
+  Test case 3: 6.000/6.000
+ Results for tolerance/corner cases:
+  Test case 1: 1.000/1.000
+  Test case 2: 1.000/1.000
+  Test case 3: 4.000/4.000
+  Test case 4: 2.000/2.000
+  Test case 5: 2.000/2.000
+  Test case 6: 2.000/2.000
+
+Mapped Results:
+Total Score: 57.60/60.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 1: 2.000/2.000
+  Test case 2: 1.000/1.000
+  Test case 3: 1.000/1.000
+  Test case 4: 3.000/3.000
+  Test case 5: 3.000/3.000
+  Test case 6: 4.000/4.000
+  Test case 7: 4.000/4.000
+  Test case 8: 4.000/4.000
+  Test case 9: 4.000/4.000
+  Test case 10: 4.000/4.000
+ Results for error test cases:
+  Test case 1: 6.000/6.000
+  Test case 2: 6.000/6.000
+  Test case 3: 6.000/6.000
+ Results for tolerance/corner cases:
+  Test case 1: 1.000/1.000
+  Test case 2: 1.000/1.000
+  Test case 3: 4.000/4.000
+  Test case 4: 1.200/2.000
+   one_k_samples  correctly stayed low during Sample Processing pre-1000th Sample phase of One K Samples Normal Counting 
+test case
+   one_k_samples did not correctly assert during Sample Processing of 1000th Sample phase of One K Samples Normal Counting 
+test case
+   one_k_samples  correctly deasserted during Sample Processing of Sample 1001 phase of One K Samples Normal Counting test 
+case
+  Test case 5: 1.200/2.000
+   one_k_samples  correctly stayed low during Sample Processing pre-1000th Sample phase of One K Samples Error Counting 
+test case
+   one_k_samples did not correctly assert during Sample Processing of 1000th Sample phase of One K Samples Error Counting 
+test case
+   one_k_samples  correctly deasserted during Sample Processing of Sample 1001 phase of One K Samples Error Counting test 
+case
+  Test case 6: 1.200/2.000
+   one_k_samples  correctly stayed low during Sample Processing Before Coefficient Update phase of Loading Coefficients 
+Set cleaars One K Samples Counting test case
+   one_k_samples did not correctly assert during Sample Processing of 1000th Sample since coefficent update phase of 
+Loading Coefficients Set cleaars One K Samples Counting test case
+   one_k_samples  correctly deasserted during Sample Processing of Sample 1001 post coefficient update phase of Loading 
+Coefficients Set cleaars One K Samples Counting test case
+
