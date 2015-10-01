@@ -1,15 +1,11 @@
 Question: What is the minimum amount of time that data_ready must remain asserted to ensure correct operation? What is the minimum amount of time, in clock cycles, that data must remain valid after data_ready is asserted in order to ensure correct operation? (You may assume that all setup and hold times, as well as any propagation delays, are negligible.)
 
-Three clock cycles. (Must remain high through signal or else it will turn EIDLE)
-Two clock cycles. (It only needs to be valid when it first passed to Datapath)
-
+Two clock cycles (2 * 10ns) 
+Three clock cycles after it's asserted (3*10ns)
 
 Question: How are the image files different? Does this make sense given the filter design built in the lab? Why or why not?
-The filtered image just shows the edges and sharpens the image to find edges. 
-This is because it's a sliding average filter. Pixels inside 
- edges have similar colors, so the sliding average is low, making it things
-inside edges look black. When it crosses the edge the average changes drastically,
-but then changes back to low when it enters the other, leaving only a trace of the edge.
+The filtered image just shows the edges and sharpens the image to find edges. This is because it's a sliding average filter. Pixels inside edges have similar colors, so the sliding average is low, making it things inside edges look black. When it crosses the edge the average changes drastically,but then changes back to low when it enters the other, leaving only a trace of the edge.
+The first image specifically filters horizontially, the second vertically, and the third combines the two.
 
 Question: What is the general syntax for each of the file IO functions used in the provided test bench (tb_fir_filter_image.sv)?
 fid = $fopen(<filename>);
@@ -18,7 +14,8 @@ $ftell(fid);
 $fseek(fid, <num_bytes>, SEEK_CUR)
 $fwrite(fid, <specifier>, <data>);
 $fclose(fid);
+Generally: function(FID, "access code")
 
 
 Question: What are the different format specifies available for use in file functions liken $fscanf(...)?
-Most C commands ones. "%c", "%s", "%i", "%d", %x", "%f", "%%", "%o", "%b". 
+Most C commands like: "%c", "%s", "%i", "%d", %x", "%f", "%%", "%o", "%b"

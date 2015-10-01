@@ -53,6 +53,12 @@ module flex_counter
 		  rollover_flag <= 1'b0;
 	       end
 	  end // if (count_enable == 1'b1)
+	else
+	  begin
+	     count_out <= count_out;
+	     rollover_flag <= rollover_flag;
+	  end // else: !if(count_enable == 1'b1)
+	
 
      end // always_ff @ (posedge clk, negedge n_rst)
    

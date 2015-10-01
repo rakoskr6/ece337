@@ -1,7 +1,6 @@
 Partner: Allison Gruninger
 
-1. Rate yourself and your partner or partners on the following criteria. Apply each criterion to each of your partners individually. Answer on a scale of 1 to 5 where 1 = strongly disagree, 3 =
-indifferent, 5 = strongly agree.
+1. Rate yourself and your partner or partners on the following criteria. Apply each criterion to each of your partners individually. Answer on a scale of 1 to 5 where 1 = strongly disagree, 3 = indifferent, 5 = strongly agree.
 	This team member made a sincere effort (to the best that you can tell) to figure out the design and testing so as to be able to contribute to the team effort.
 	Allison = 5		Kyle = 5
 	This team member was respectful and considerate of other team members.
@@ -13,26 +12,24 @@ indifferent, 5 = strongly agree.
 
 
 2. Describe briefly the contribution of each team member.
-	Kyle - I helped Allison understand the timer. I decided to use the output signal to clear the counter and I decided to ignore the count out due to the fact it was not needed in the design. Upon implementation I was required to change the 10 and 9 bit rollover values to 4bit variables instead of passing in integers. 
+	Kyle: I helped explain how the opcodes work in the controller. Addionally, I helped explain a couple caveats with hooking up modules, specifically issues with calling module parameters. 
 
-	Allison: Allison helped explain the RCU. Specifically, she helped explain the need of an additional wait state between inital and the data load. This was required in order to reduce some timing errors. This helped alleviate some of my test bench issues. Furthermore, Allison gave suggestions for additional test bench ideas.
-
+	Allison: She helped explain the general state diagram flow of the controller. It was very useful to know when wait states were needed that weren't immediately obvious. Additionally, she helped with the magnitude counter logic.
 
 
 
 3. How many times did you and your team-mate(s) meet? How frequently did you e-mail or instant message your team-mate(s)?
-	We met 3 times - including once in open lab. We decided to always meet in person in order to more easily exchange ideas. Altogether we had a fairly good understanding of the lab and were able to ask questiosn of each otehr when needed.
+	We met 4 times - We decided to always meet in person to easily colloborate. We met Thursday, Sunday, Tuesday, and Wednesday. Altogether we had a fairly good understanding of the lab and were able to ask questions of each other when needed.
 
 4. What did you contribute to the team effort?
-	As mentioned above I help explain how the timer was used in an atypical way. Additionally, I was able to help with general RCV questions.
+	As mentioned above I was able to mention how the opcodes worked like the simple computer of 270. This was useful in implementing the actual output logic based off of the controller states.
 
 
 5. What did each of your collaborators contribute? If you learned something useful from this person, what was it?
-	Alex Marcellus was able to help point out potential timing errors in the design which prevented much headache
+	Nick Fonseca was very useful in explaining how the filter worked on the image and how it detected edges.
 
 6. Whose testbench code (viewed on Piazza) significantly helped you? How?
-	Lucas Krull's testbench provided significanlty further verification of the originally run testbench. It verified parts of my design that I already believed to work and it reiterated parts of my design that needed to be fixed
-
+	Alex Marcellus' test bench was specifically useful. It showed that my one_k_value wasn't properly asserted after running for 1000samples. Additionally, it was a very robust test.
 
 
 Thought Questions: View Lab5.txt
