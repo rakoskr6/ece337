@@ -1,0 +1,11 @@
+Question: What is the minimum amount of time that data_ready must remain asserted to ensure correct operation? What is the minimum amount of time, in clock cycles, that data must remain valid after data_ready is asserted in order to ensure correct operation? (You may assume that all setup and hold times, as well as any propagation delays, are negligible.)
+
+
+Question: How are the image files different? Does this make sense given the filter design built in the lab? Why or why not?
+
+
+Question: What is the general syntax for each of the file IO functions used in the provided test bench (tb_fir_filter_image.sv)?
+
+
+Question: What are the different format specifies available for use in file functions liken $fscanf(...)?
+
