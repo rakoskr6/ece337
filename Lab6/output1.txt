@@ -1,0 +1,181 @@
+
+Edge_Detect Results:
+Source Results:
+Total Score: 1.00/1.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.200/0.200
+  Test case 1: 0.200/0.200
+  Test case 2: 0.200/0.200
+  Test case 3: 0.200/0.200
+  Test case 4: 0.200/0.200
+
+Mapped Results:
+Total Score: 1.00/1.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.200/0.200
+  Test case 1: 0.200/0.200
+  Test case 2: 0.200/0.200
+  Test case 3: 0.200/0.200
+  Test case 4: 0.200/0.200
+
+
+Eop_Detect Results:
+Source Results:
+Total Score: 1.00/1.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.250/0.250
+  Test case 1: 0.250/0.250
+  Test case 2: 0.250/0.250
+  Test case 3: 0.250/0.250
+
+Mapped Results:
+Total Score: 1.00/1.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.250/0.250
+  Test case 1: 0.250/0.250
+  Test case 2: 0.250/0.250
+  Test case 3: 0.250/0.250
+
+
+Decode Results:
+Source Results:
+Total Score: 1.29/2.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.375/0.500
+   d_orig was incorrectly not a logic one during reset assertion phase of Power-on-Reset Case
+   d_orig was stable during reset assertion phase of Power-on-Reset Case
+   d_orig was stable during reset release phase of Power-on-Reset Case
+  Test case 1: 0.083/0.250
+   d_orig was incorrect during first bit arrival phase of Bit Sequence 1
+   d_orig was stable during first bit wait phase of Bit Sequence 1
+   d_orig was incorrect during first bit storing phase of Bit Sequence 1
+   d_orig was incorrect during second bit arrival phase of Bit Sequence 1
+   d_orig was stable during second bit wait phase of Bit Sequence 1
+   d_orig was incorrect during second bit storing phase of Bit Sequence 1
+  Test case 2: 0.208/0.250
+   d_orig was correct during first bit arrival phase of Bit Sequence 2
+   d_orig was stable during first bit wait phase of Bit Sequence 2
+   d_orig was correct during first bit storing phase of Bit Sequence 2
+   d_orig was correct during second bit arrival phase of Bit Sequence 2
+   d_orig was stable during second bit wait phase of Bit Sequence 2
+   d_orig was incorrect during second bit storing phase of Bit Sequence 2
+  Test case 3: 0.208/0.250
+   d_orig was correct during first bit arrival phase of Bit Sequence 3
+   d_orig was stable during first bit wait phase of Bit Sequence 3
+   d_orig was correct during first bit storing phase of Bit Sequence 3
+   d_orig was incorrect during second bit arrival phase of Bit Sequence 3
+   d_orig was stable during second bit wait phase of Bit Sequence 3
+   d_orig was correct during second bit storing phase of Bit Sequence 3
+  Test case 4: 0.167/0.250
+   d_orig was incorrect during first bit arrival phase of Bit Sequence 4
+   d_orig was stable during first bit wait phase of Bit Sequence 4
+   d_orig was incorrect during first bit storing phase of Bit Sequence 4
+   d_orig was correct during second bit arrival phase of Bit Sequence 4
+   d_orig was stable during second bit wait phase of Bit Sequence 4
+   d_orig was correct during second bit storing phase of Bit Sequence 4
+  Test case 5: 0.250/0.250
+  Test case 6: 0.000/0.250
+   d_orig was incorrect during eop & shift_enable check phase of EOP w/ Shift_Enable Case
+As this is supposed to be used to grade a functional design that you have
+already throughly tested, the more advanced test cases will not contribute
+points to your score until all of the Basic test cases are 100% satisfied.
+Additionally the results of the more advanced test cases will not be reported
+to you until all of the Basic test cases are 100% satisfied.
+
+Mapped Results:
+Total Score: 1.29/2.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.375/0.500
+   d_orig was incorrectly not a logic one during reset assertion phase of Power-on-Reset Case
+   d_orig was stable during reset assertion phase of Power-on-Reset Case
+   d_orig was stable during reset release phase of Power-on-Reset Case
+  Test case 1: 0.083/0.250
+   d_orig was incorrect during first bit arrival phase of Bit Sequence 1
+   d_orig was stable during first bit wait phase of Bit Sequence 1
+   d_orig was incorrect during first bit storing phase of Bit Sequence 1
+   d_orig was incorrect during second bit arrival phase of Bit Sequence 1
+   d_orig was stable during second bit wait phase of Bit Sequence 1
+   d_orig was incorrect during second bit storing phase of Bit Sequence 1
+  Test case 2: 0.208/0.250
+   d_orig was correct during first bit arrival phase of Bit Sequence 2
+   d_orig was stable during first bit wait phase of Bit Sequence 2
+   d_orig was correct during first bit storing phase of Bit Sequence 2
+   d_orig was correct during second bit arrival phase of Bit Sequence 2
+   d_orig was stable during second bit wait phase of Bit Sequence 2
+   d_orig was incorrect during second bit storing phase of Bit Sequence 2
+  Test case 3: 0.208/0.250
+   d_orig was correct during first bit arrival phase of Bit Sequence 3
+   d_orig was stable during first bit wait phase of Bit Sequence 3
+   d_orig was correct during first bit storing phase of Bit Sequence 3
+   d_orig was incorrect during second bit arrival phase of Bit Sequence 3
+   d_orig was stable during second bit wait phase of Bit Sequence 3
+   d_orig was correct during second bit storing phase of Bit Sequence 3
+  Test case 4: 0.167/0.250
+   d_orig was incorrect during first bit arrival phase of Bit Sequence 4
+   d_orig was stable during first bit wait phase of Bit Sequence 4
+   d_orig was incorrect during first bit storing phase of Bit Sequence 4
+   d_orig was correct during second bit arrival phase of Bit Sequence 4
+   d_orig was stable during second bit wait phase of Bit Sequence 4
+   d_orig was correct during second bit storing phase of Bit Sequence 4
+  Test case 5: 0.250/0.250
+  Test case 6: 0.000/0.250
+   d_orig was incorrect during eop & shift_enable check phase of EOP w/ Shift_Enable Case
+As this is supposed to be used to grade a functional design that you have
+already throughly tested, the more advanced test cases will not contribute
+points to your score until all of the Basic test cases are 100% satisfied.
+Additionally the results of the more advanced test cases will not be reported
+to you until all of the Basic test cases are 100% satisfied.
+
+
+Rx_Fifo Results:
+Source Results:
+Total Score: 1.00/1.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.250/0.250
+  Test case 1: 0.250/0.250
+  Test case 2: 0.250/0.250
+  Test case 3: 0.250/0.250
+
+Mapped Results:
+Total Score: 1.00/1.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.250/0.250
+  Test case 1: 0.250/0.250
+  Test case 2: 0.250/0.250
+  Test case 3: 0.250/0.250
+
+
+Coverage Results from Running tb_edge_detect.sv for 100us:
+Source Results: 1.00/1.00
+Mapped Results: 1.00/1.00
+
+Coverage Results from Running tb_eop_detect.sv for 100us:
+Source Results: 1.00/1.00
+Mapped Results: 1.00/1.00
+
+Coverage Results from Running tb_decode.sv for 100us:
+Source Results: 2.00/2.00
+Mapped Results: 2.00/2.00
+
+Test Case Tracking Results from Running tb_rx_fifo.sv for 100us:
+Source Results:
+Total Score: 1.00/1.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 1: 0.200/0.200
+  Test case 2: 0.200/0.200
+  Test case 3: 0.200/0.200
+  Test case 4: 0.200/0.200
+  Test case 5: 0.200/0.200
+
+
+You have used 1 out of 3 submission attempts on Lab 6 Phase I
+
