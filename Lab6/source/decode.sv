@@ -17,8 +17,8 @@ module decode
    );
    reg 	  current;
    reg 	  prev;
-      
-      
+   
+   
    always_ff @ (posedge clk, negedge n_rst)
      begin
 	if (n_rst == 1'b0)
@@ -34,8 +34,9 @@ module decode
 		    begin
 		       current <= 1'b1;
 		    end
-		  current <= current;
+		  
 	       end
+	     
 	  end	
      end // always_ff @
    
@@ -51,16 +52,17 @@ module decode
 	     if (shift_enable == 1'b1)
 	       begin
 		  prev <= current;
-		  if (eop == 1'b1)
-		    begin
-		       current <= 1'b1;
-		    end
-		  prev <= prev;
+		  //f (eop == 1'b1)
+		   // begin
+		    //   current <= 1'b1;
+		    //end
+		  
 	       end
+	     
 	  end	
      end // always_ff @
    
-   assign d_edge = current ^ prev;
+   assign d_orig = current ^ prev;
    
 
 endmodule

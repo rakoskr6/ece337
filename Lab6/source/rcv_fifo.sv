@@ -6,7 +6,7 @@
 // Version:     1.0  Initial Design Entry
 // Description: rcv fifo block
 
-module fifo
+module rcv_fifo
   (
    input clk,
    input n_rst,
@@ -18,6 +18,6 @@ module fifo
    output full
    );
 
-   fifo(.r_clk(clk), .w_clk(clk), .n_rst(n_rst), .r_enable(r_enable), .w_enable(w_enable), .w_data(w_data), .r_data(r_data), .empty(empty), .full(full));
+   fifo DUG(.r_clk(clk), .w_clk(clk), .n_rst(n_rst), .r_enable(r_enable), .w_enable(w_enable), .w_data(w_data), .r_data(r_data), .empty(empty), .full(full));
    
 endmodule
