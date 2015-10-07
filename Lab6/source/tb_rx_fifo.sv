@@ -52,6 +52,15 @@ module tb_rx_fifo
    // Test bench process
    initial
      begin
+	tb_test_case = 0;
+
+	@(negedge tb_clk);
+	tb_n_rst = 0;
+	@(negedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
+
 	tb_total_fail = 0;
 	
 	//case number 1
@@ -61,86 +70,86 @@ module tb_rx_fifo
 	tb_n_rst = 1;
 	tb_r_enable = 0;
 	tb_w_enable = 0;
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	
 
 	
 	tb_w_data = 8'b00000000;
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b0;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 
 	
 	tb_w_data = 8'b11111111;
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b0;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 
 	
 	tb_w_data = 8'b00000000;
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b0;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 
 	
 	tb_w_data = 8'b00001111;
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b0;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 
 	
 	tb_w_data = 8'b11110000;
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b0;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 
 
 	tb_w_data = 8'b11111111;
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b0;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 
 	
 	tb_w_data = 8'b11111111;
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b0;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 
 	
 	tb_w_data = 8'b00000000;
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_w_enable = 1'b0;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 
 	
 	// Check the DUT's output value
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	#(TEST_DELAY - 1);
 	if(tb_empty == 1'b0 && tb_full == 1'b1)
 	  begin
@@ -161,12 +170,12 @@ module tb_rx_fifo
 	// Send test input to the design
 	tb_n_rst = 1;
 	tb_r_enable = 1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_r_enable = 0;
 	
 	// Check the DUT's output value
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	#(TEST_DELAY - 1);
 	if(tb_empty == 1'b0 && tb_full == 1'b1)
 	  begin
@@ -185,12 +194,12 @@ module tb_rx_fifo
 	// Send test input to the design
 	tb_n_rst = 1;
 	tb_r_enable = 1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_r_enable = 0;
 	
 	// Check the DUT's output value
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	#(TEST_DELAY - 1);
 	if(tb_empty == 1'b0 && tb_full == 1'b1)
 	  begin
@@ -210,12 +219,12 @@ module tb_rx_fifo
 	// Send test input to the design
 	tb_n_rst = 1;
 	tb_r_enable = 1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_r_enable = 0;
 	
 	// Check the DUT's output value
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	#(TEST_DELAY - 1);
 	if(tb_empty == 1'b0 && tb_full == 1'b1)
 	  begin
@@ -235,12 +244,12 @@ module tb_rx_fifo
 	// Send test input to the design
 	tb_n_rst = 1;
 	tb_r_enable = 1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_r_enable = 0;
 	
 	// Check the DUT's output value
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	#(TEST_DELAY - 1);
 	if(tb_empty == 1'b0 && tb_full == 1'b1)
 	  begin
@@ -261,12 +270,12 @@ module tb_rx_fifo
 	// Send test input to the design
 	tb_n_rst = 1;
 	tb_r_enable = 1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_r_enable = 0;
 	
 	// Check the DUT's output value
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	#(TEST_DELAY - 1);
 	if(tb_empty == 1'b0 && tb_full == 1'b1)
 	  begin
@@ -286,12 +295,12 @@ module tb_rx_fifo
 	// Send test input to the design
 	tb_n_rst = 1;
 	tb_r_enable = 1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_r_enable = 0;
 	
 	// Check the DUT's output value
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	#(TEST_DELAY - 1);
 	if(tb_empty == 1'b0 && tb_full == 1'b1)
 	  begin
@@ -311,12 +320,12 @@ module tb_rx_fifo
 	// Send test input to the design
 	tb_n_rst = 1;
 	tb_r_enable = 1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_r_enable = 0;
 	
 	// Check the DUT's output value
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	#(TEST_DELAY - 1);
 	if(tb_empty == 1'b0 && tb_full == 1'b1)
 	  begin
@@ -337,12 +346,12 @@ module tb_rx_fifo
 	// Send test input to the design
 	tb_n_rst = 1;
 	tb_r_enable = 1;
-	@(posedge tb_clk);
+	@(negedge tb_clk);
 	tb_r_enable = 0;
 	
 	// Check the DUT's output value
-	@(posedge tb_clk);
-	@(posedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
 	#(TEST_DELAY - 1);
 	if(tb_empty == 1'b1 && tb_full == 1'b0)
 	  begin
