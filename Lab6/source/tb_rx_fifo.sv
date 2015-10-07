@@ -188,6 +188,26 @@ module tb_rx_fifo
 	     
 	  end
 
+
+
+	//test case 2.5
+	// Send test input to the design
+	tb_r_enable = 0;
+	tb_w_enable = 0;
+	@(negedge tb_clk);
+	@(negedge tb_clk);
+	
+
+	
+	tb_w_data = 8'b00000000;
+	@(negedge tb_clk);
+	@(negedge tb_clk);
+	tb_w_enable = 1'b1;
+	@(negedge tb_clk);
+	tb_w_enable = 1'b0;
+	@(negedge tb_clk);
+
+	
 	//case number 3
 	tb_test_case++;
 	
@@ -364,7 +384,38 @@ module tb_rx_fifo
 	     
 	  end
 
+	//case number 10
+	tb_test_case++;
+	
+	// Send test input to the design
+	tb_n_rst = 1;
+	tb_r_enable = 1;
+	@(negedge tb_clk);
+	tb_r_enable = 0;
+	
+	// Check the DUT's output value
+	@(negedge tb_clk);
+	@(negedge tb_clk);
+	#(TEST_DELAY - 1);
+	if(tb_empty == 1'b1 && tb_full == 1'b0)
+	  begin
+	     $info("Correct output for test case %d!", tb_test_case);
+	  end
+	else
+	  begin
+	     $error("INCORRECT output for test case %d!", tb_test_case);
+	     tb_total_fail++;
+	     
+	  end
 
+
+	@(negedge tb_clk);
+	tb_n_rst = 0;
+	@(negedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
+	@(negedge tb_clk);
+	
 	
 	if(NUM_TEST_CASES != tb_test_case)
 	  begin
