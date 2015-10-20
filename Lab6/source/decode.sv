@@ -8,12 +8,12 @@
 
 module decode
   (
-   input clk,
-   input n_rst,
-   input d_plus,
-   input shift_enable,
-   input eop,
-   output d_orig
+   input wire clk,
+   input wire n_rst,
+   input wire d_plus,
+   input wire shift_enable,
+   input wire eop,
+   output wire d_orig
    );
    reg 	  current;
    reg 	  prev;
@@ -27,9 +27,9 @@ module decode
 	  end
 	else
 	  begin
+             current <= d_plus;
 	     if (shift_enable == 1'b1)
-	       begin
-		  current <= d_plus;
+	       begin		  
 		  if (eop == 1'b1)
 		    begin
 		       current <= 1'b1;
@@ -51,18 +51,17 @@ module decode
 	  begin
 	     if (shift_enable == 1'b1)
 	       begin
-		  prev <= current;
-		  //f (eop == 1'b1)
-		   // begin
-		    //   current <= 1'b1;
-		    //end
-		  
-	       end
-	     
+		  prev <= d_plus;	  
+	          if (eop == 1'b1)
+	       	     begin
+	                prev <= 1;
+	             end
+	       end else
+	         prev <= prev;
 	  end	
      end // always_ff @
    
-   assign d_orig = current ^ prev;
+   assign d_orig = (current == prev);
    
 
 endmodule

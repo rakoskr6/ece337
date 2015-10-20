@@ -15,15 +15,15 @@ module rcu
     input shift_enable,
     input [7:0]rcv_data,
     input byte_received,
-    output rcving,
-    output w_enable,
-    output r_error
+    output reg rcving,
+    output reg w_enable,
+    output reg r_error
     );
 
    typedef enum logic [4:0] {idleWait, idle, beforeIdle, rcvFirst, chkSync, Wait, rcvNext, wrtNext,syncErr, eidle, WaitSyncErr, WaitrcvNext} state_type;
    state_type state, nextstate;
 
-always_ff @(posedge clk, negedge n_rest)
+always_ff @(posedge clk, negedge n_rst)
   begin
      if (n_rst == 0)
        begin
@@ -68,7 +68,7 @@ always_ff @(posedge clk, negedge n_rest)
 	  chkSync:
 	    begin
 	       if (rcv_data == 8'b10000000) nextstate = Wait;
-	       else nextstate = SyncErr;
+	       else nextstate = syncErr;
 	    end
 	  
 	  Wait:
@@ -120,15 +120,44 @@ always_ff @(posedge clk, negedge n_rest)
 
    always_comb
      begin
-	idle = !rcving && !w_enable && !r_error;
-	rcvFirst = rcving && !w_enable && !r_error;
-	chkSync = !rcving && !w_enable && !r_error;
-	Wait = rcving && !w_enable && !r_error;
-	rcvNext = rcving && !w_enable && !r_error;
-	wrtNext = !rcving && !w_enable && !r_error;
-	syncErr = rcving && !w_enable && r_error;
-	eidle = !rcving && !w_enable && r_error;
-	  
+
+	if (state == idle || state == idleWait)
+	  begin
+	     rcving = 0;
+	     w_enable = 0;
+	     r_error = 0;
+	  end
+	else if (state == rcvFirst || state == chkSync || state == Wait || state == rcvNext)
+	  begin
+	     rcving = 1;
+	     w_enable = 0;
+	     r_error = 0;
+	  end
+	else if (state == wrtNext)
+	  begin
+	     rcving = 1;
+	     w_enable = 1;
+	     r_error = 0;
+	  end
+	else if (state == syncErr)
+	  begin
+	     rcving = 1;
+	     w_enable = 1;
+	     r_error = 0;
+	  end
+	else if (state == eidle || state == WaitSyncErr || state == WaitrcvNext)
+	  begin
+	     rcving = 0;
+	     w_enable = 0;
+	     r_error = 1;
+	  end
+	else
+	  begin
+	     rcving = 0;
+	     w_enable = 0;
+	     r_error = 0;
+	  end
+
      end
       
 endmodule
